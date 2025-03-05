@@ -76,6 +76,7 @@ Simulationen-Wertentwicklung/
 │   │── inflation_model.py
 │   │── wealth_projection.py
 │   │── savings_calculation.py
+│   │── utils.py
 │── data/
 │   │── input/
 │   │   │── example_input.json
