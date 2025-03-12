@@ -1,8 +1,8 @@
 # Contribution Guidelines for Simulationen-Wertentwicklung
 
 ## 📌 General Rules
-- **English is the standard language** for all **code, comments, variable names, function names, Git commits, and discussions**.
-- **German is used for documentation** aimed at customers (e.g., `README.md`, user manuals, and external guides).
+- **English is the standard language** for all **code, comments, variable names, function names, project documentation, Git commits, and discussions**.
+- **German is used only for documentation aimed at customers** (e.g., user manuals and external guides), which will be edited separately and included in the customer package.
 - Ensure **consistent formatting** and follow the naming conventions below.
 
 ---
@@ -45,19 +45,23 @@
 ---
 
 ## 📌 2️⃣ Git Commit Message Format
-- Keep messages **clear and concise** using present tense.
+- Keep messages clear and concise using present tense.
 - Follow this format: `type: description`
-- **Types:**
+- Types:
   - `feat:` → New features
   - `fix:` → Bug fixes
   - `docs:` → Documentation updates
   - `refactor:` → Code improvements without new features
+  - `style:` → Code formatting changes (e.g., applying Black, indentation updates)
+  - `chore:` → Changes to project files (e.g., README.md, CONTRIBUTING.md, or documentation updates)
   - `test:` → Adding or modifying tests
 
 ✅ **Good Examples:**
 ```
 feat: add credit repayment simulation
 fix: correct inflation rate calculation
+style: reformat codebase with Black
+chore: update README with new installation instructions
 ```
 ❌ **Bad Examples:**
 ```
@@ -69,7 +73,7 @@ fixing bug in interest calculation
 
 ## 📌 3️⃣ Project Structure
 ```
-Simulationen-Wertentwicklung/
+Philanzen-Simulation-Wertentwicklung/
 │── simulation/
 │   │── __init__.py
 │   │── credit_simulation.py
@@ -79,13 +83,13 @@ Simulationen-Wertentwicklung/
 │   │── utils.py
 │── data/
 │   │── input/
-│   │   │── example_input.json
+│   │   │── financial_data.json
 │   │── output/
 │   │   │── results_01.csv
 │── main.py
-│── README.md  # (German for customers)
+│── README.md  # (German for customers, packaged separately)
 │── pyproject.toml
-│── docs/  # (German documentation for customers)
+│── docs/  # (German documentation for customers, packaged separately)
 │── .gitignore
 ```
 
@@ -113,13 +117,14 @@ Simulationen-Wertentwicklung/
       A class to simulate loan repayment calculations.
       """
   ```
+- **Note:** Type annotations are recommended for clarity but are not required.
 
 ---
 
 ## 📌 5️⃣ Code Formatting
-- Use **4 spaces for indentation** (no tabs).
-- Follow **PEP 8** style guidelines.
-- Keep lines **under 80 characters** for readability.
+- Use **tabs for indentation** (instead of spaces).
+- Use **Black** for automatic formatting.
+- Keep **lines under 80 characters** for readability.
 
 ---
 
