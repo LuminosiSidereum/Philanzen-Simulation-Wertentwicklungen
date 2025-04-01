@@ -54,6 +54,7 @@
   - `refactor:` → Code improvements without new features
   - `style:` → Code formatting changes (e.g., applying Black, indentation updates)
   - `chore:` → Changes to project files (e.g., README.md, CONTRIBUTING.md, or documentation updates)
+  - `merge:` → Merge commits
   - `test:` → Adding or modifying tests
 
 ✅ **Good Examples:**
