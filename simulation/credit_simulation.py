@@ -30,7 +30,7 @@ if __name__ == "__main__":
     neuerKreditbetrag: float
 
     # Daten einlesen
-    df_creditdetails = pd.read_csv("data/creditdetails.csv")
+    df_creditdetails = pd.read_csv("data/input/creditdetails.csv")
     df_creditdaten = pd.DataFrame(
         columns=["Laufzeit", "Kreditbetrag", "Rückzahlung", "Zinsertrag"]
     )
@@ -96,5 +96,5 @@ if __name__ == "__main__":
     df_credituebersicht = pd.concat([df_credituebersicht, speicherserie.to_frame().T])
 
     # Daten speichern
-    df_creditdaten.to_csv("data/creditdaten.csv", index=False)
-    df_credituebersicht.to_csv("data/credituebersicht.csv", index=False)
+    df_creditdaten.to_csv("data/output/creditdaten.csv", index=False)
+    df_credituebersicht.to_csv("data/output/credituebersicht.csv", index=False)

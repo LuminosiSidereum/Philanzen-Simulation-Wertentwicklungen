@@ -9,7 +9,7 @@ def _vermögensberechnung(Vermoegen, Zinssatz, Sparrate) -> tuple[float, float]:
 
 if __name__ == "__main__":
     # Daten einlesen
-    df_ertragsdetails = pd.read_csv("data/ertragsdetails.csv")
+    df_ertragsdetails = pd.read_csv("data/input/ertragsdetails.csv")
     df_vermoegensdaten = pd.DataFrame(
         columns=["Laufzeit", "Vermögen", "Sparrate", "Zinsertrag"]
     )
@@ -82,5 +82,5 @@ if __name__ == "__main__":
     df_credituebersicht = pd.concat([df_credituebersicht, speicherserie.to_frame().T])
 
     # Daten speichern
-    df_vermoegensdaten.to_csv("data/vermoegensdaten.csv", index=False)
-    df_credituebersicht.to_csv("data/vermoegensuebersicht.csv", index=False)
+    df_vermoegensdaten.to_csv("data/output/vermoegensdaten.csv", index=False)
+    df_credituebersicht.to_csv("data/output/vermoegensuebersicht.csv", index=False)
