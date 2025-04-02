@@ -1,5 +1,14 @@
-from simulation import credit_simulation, wealth_projection
+import logging
+from simulation import credit_simulation, wealth_projection, utils
 
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.FileHandler("financial_simulations.log")],
+)
+logger = logging.getLogger(__name__)
 
 def main():
     print("Welche Simulation möchten Sie starten?")
