@@ -32,3 +32,22 @@ def load_ui_text(*,language: str, interface: str)-> dict:
     except json.JSONDecodeError:
         logger.error(f"Error decoding JSON from file: {file_path}")
         return {}
+    
+def load_settings() -> dict:
+    """
+    Load settings from a JSON file.
+
+    Returns:
+        dict: A dictionary containing the settings.
+    """
+    try:
+        file_path = global_variables["root_path"]/"resources"/"settings.json"
+        with open(file_path, 'r', encoding='utf-8') as file:
+            settings = json.load(file)
+        return settings
+    except FileNotFoundError:
+        logger.error(f"File not found: {file_path}")
+        return {}
+    except json.JSONDecodeError:
+        logger.error(f"Error decoding JSON from file: {file_path}")
+        return {}
