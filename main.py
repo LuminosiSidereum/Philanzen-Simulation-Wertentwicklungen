@@ -1,12 +1,17 @@
 import logging
 from simulation import credit_simulation, wealth_projection, utils
-
+from logging.handlers import TimedRotatingFileHandler
 
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[logging.FileHandler("financial_simulations.log")],
+    handlers=[
+        logging.FileHandler("financial_simulations.log"),
+        TimedRotatingFileHandler(
+            "financial_simulations.log", when="midnight", backupCount=7
+        ),
+    ],
 )
 logger = logging.getLogger(__name__)
 
@@ -48,4 +53,5 @@ def run_simulation_interface():
 
 
 if __name__ == "__main__":
+    logger.info("Starting financial simulations.")
     run_simulation_interface()
