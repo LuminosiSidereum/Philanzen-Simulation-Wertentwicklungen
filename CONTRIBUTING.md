@@ -87,6 +87,9 @@ Philanzen-Simulation-Wertentwicklung/
 │   │   │── financial_data.json
 │   │── output/
 │   │   │── results_01.csv
+│── resources/
+│   │── settings.json
+│   │── ui_text.json
 │── main.py
 │── README.md  # (German for customers, packaged separately)
 │── pyproject.toml
