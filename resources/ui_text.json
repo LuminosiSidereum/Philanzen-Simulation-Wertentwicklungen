@@ -1,0 +1,17 @@
+{
+    "de": {
+        "homescreen": {
+            "mode_selection": "Welche Simulation möchten Sie starten?",
+            "mode_1": "1: Vermögensentwicklung",
+            "mode_2": "2: Abzahlungsplan",
+            "mode_3": "3: Inflationssimulation",
+            "mode_4": "4: Sparplan",
+            "user_input": "Bitte Nummer eingeben: ",
+            "invalid_input": "Ungültige Eingabe. Bitte wählen sie einen gültigen Modus aus."
+        },
+        "credit_simulation": {
+            },
+        "wealth_projection": { 
+        }
+    }
+}
