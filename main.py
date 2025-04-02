@@ -10,26 +10,42 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-def main():
-    print("Welche Simulation möchten Sie starten?")
-    print("1: Vermögensentwicklung")
-    print("2: Abzahlungsplan")
-    print("3: Inflationssimulation")
-    print("3: Sparplan")
 
-    user_choice = input("Bitte Nummer eingeben: ")
+# MARK: Functions
+def select_simulation(*, ui_text: dict) -> int:
+    while True:
+        try:
+            user_input = int(input(ui_text["mode_selection_input"]))
+            if user_input in range(len(ui_text["modes"])):
+                return user_input
+            else:
+                print(ui_text["invalid_mode_selection"])
+        except ValueError:
+            print(ui_text["invalid_input"])
 
-    if user_choice == "1":
+
+def run_simulation_interface():
+    ui_text: dict = utils.load_ui_text(language="de", interface="homescreen")  # type: ignore
+
+    print(ui_text["mode_selection_request"])
+    for mode_name in ui_text["modes"].values():
+        print(mode_name)
+
+    user_choice = select_simulation(ui_text=ui_text)
+    if user_choice == 0:
         wealth_projection.execute_simulation()
-    elif user_choice == "2":
+    elif user_choice == 1:
         credit_simulation.execute_simulation()
-    elif user_choice == "3":
+    elif user_choice == 2:
         pass
-    elif user_choice == "4":
+    elif user_choice == 3:
         pass
     else:
-        print("Ungültige Auswahl.")
+        logger.error(
+            f"Unhandled and invalid mode selection made by user. Mode selection: {user_choice}"
+        )
+        quit()
 
 
 if __name__ == "__main__":
-    main()
+    run_simulation_interface()

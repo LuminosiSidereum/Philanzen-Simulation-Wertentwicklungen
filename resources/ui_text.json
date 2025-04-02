@@ -1,17 +1,18 @@
 {
     "de": {
         "homescreen": {
-            "mode_selection": "Welche Simulation möchten Sie starten?",
-            "mode_1": "1: Vermögensentwicklung",
-            "mode_2": "2: Abzahlungsplan",
-            "mode_3": "3: Inflationssimulation",
-            "mode_4": "4: Sparplan",
-            "user_input": "Bitte Nummer eingeben: ",
-            "invalid_input": "Ungültige Eingabe. Bitte wählen sie einen gültigen Modus aus."
-        },
-        "credit_simulation": {
+            "mode_selection_request": "Welche Simulation möchten Sie starten?",
+            "modes": {
+                "mode_0": "0: Vermögensentwicklung",
+                "mode_1": "1: Abzahlungsplan",
+                "mode_2": "2: Inflationssimulation",
+                "mode_3": "3: Sparplan"
             },
-        "wealth_projection": { 
-        }
+            "mode_selection_input": "Bitte Nummer eingeben: ",
+            "invalid_mode_selection": "Ungültige Eingabe. Bitte wählen Sie eine gültige Nummer aus.",
+            "invalid_input": "Ungültige Eingabe. Bitte geben sie eine gültige Zahl ein."
+        },
+        "credit_simulation": {},
+        "wealth_projection": {}
     }
 }
