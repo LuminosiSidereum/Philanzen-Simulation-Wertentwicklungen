@@ -51,3 +51,21 @@ def load_settings() -> dict:
     except json.JSONDecodeError:
         logger.error(f"Error decoding JSON from file: {file_path}")
         return {}
+    
+def user_input_float(ui_text_input_request: str, ui_text_invalid_input: str) -> float:
+    """
+    Get a float input from the user with a prompt.
+
+    Args:
+        ui_text_input_request (str): The prompt text for user input.
+        ui_text_invalid_input (str): The text to display when the user enters invalid input.
+
+    Returns:
+        float: The float value entered by the user.
+    """
+    while True:
+        try:
+            user_input = float(input(ui_text_input_request))
+            return user_input
+        except ValueError:
+            print(ui_text_invalid_input)
