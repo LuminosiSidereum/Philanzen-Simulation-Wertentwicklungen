@@ -12,7 +12,18 @@
             "invalid_mode_selection": "Ungültige Eingabe. Bitte wählen Sie eine gültige Nummer aus.",
             "invalid_input": "Ungültige Eingabe. Bitte geben sie eine gültige Zahl ein."
         },
-        "credit_simulation": {},
+        "credit_simulation": {
+            "welcome_message": "Bitte halten Sie die Kreditdetails (Kreditbetrag, Zinssatz, Laufzeit in Monaten ein oder die monatliche Abzahlung) parat.",
+            "user_input_calculation_selection": "Vor der Berechnung müssen Sie auswählen, ob Sie die monatliche Abzahlung (0) oder die Laufzeit in Monaten (1) berechnen möchten: (0/1) ",
+            "user_input_credit_details": "Bitte geben Sie nun die Kreditdetails als Zahl ein.",
+            "credit_amount": "Kreditbetrag: ",
+            "credit_interest_rate": "Zinssatz: ",
+            "credit_duration": "Laufzeit: ",
+            "credit_downpayment_monthly": "Monatliche Abzahlungsrate: ",
+            "credit_total_interest": "Gesamtzins: ",
+            "credit_total_costs": "Gesamtkosten: ",
+            "invalid_input": "Ungültige Eingabe. Bitte geben sie eine gültige Zahl ein."
+        },
         "wealth_projection": {}
     }
 }
