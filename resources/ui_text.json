@@ -4,7 +4,7 @@
             "mode_selection_request": "Welche Simulation möchten Sie starten?",
             "modes": {
                 "mode_0": "0: Vermögensentwicklung",
-                "mode_1": "1: Abzahlungsplan",
+                "mode_1": "1: Abzahlungsplan für einen Kredit",
                 "mode_2": "2: Inflationssimulation",
                 "mode_3": "3: Sparplan"
             },
@@ -17,7 +17,7 @@
             "user_input_calculation_selection": "Vor der Berechnung müssen Sie auswählen, ob Sie die monatliche Abzahlung (0) oder die Laufzeit in Monaten (1) berechnen möchten: (0/1) ",
             "user_input_credit_details": "Bitte geben Sie nun die Kreditdetails als Zahl ein.",
             "credit_amount": "Kreditbetrag: ",
-            "credit_interest_rate": "Zinssatz: ",
+            "credit_interest_rate": "Zinssatz | % : ",
             "credit_duration": "Laufzeit: ",
             "credit_downpayment_monthly": "Monatliche Abzahlungsrate: ",
             "credit_total_interest": "Gesamtzins: ",

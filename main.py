@@ -1,4 +1,5 @@
 import logging
+import os
 from simulation import credit_simulation, wealth_projection, utils
 from logging.handlers import TimedRotatingFileHandler
 
@@ -38,6 +39,7 @@ def run_simulation_interface():
         print(mode_name)
 
     user_choice = select_simulation(ui_text=ui_text)
+    os.system("cls" if os.name == "nt" else "clear")
     if user_choice == 0:
         wealth_projection.execute_simulation()
     elif user_choice == 1:
