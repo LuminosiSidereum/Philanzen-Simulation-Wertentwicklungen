@@ -337,3 +337,6 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
         duration: int = utils.user_input_int(
             ui_text["credit_duration"], ui_text["invalid_input"]
         )
+        raise NotImplementedError(
+            "The calculation of the monthly downpayment is not implemented yet."
+        )

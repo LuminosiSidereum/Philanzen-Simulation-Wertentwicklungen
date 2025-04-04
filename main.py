@@ -39,11 +39,22 @@ def select_simulation(*, ui_text: dict) -> int:
         except ValueError:
             print(ui_text["invalid_input"])
 
+def execute_selected_simulation(user_choice: int):
+    if user_choice == 0:
+        raise NotImplementedError(f"Simulation is not implemented yet. {user_choice = }")
+    elif user_choice == 1:
+        credit_simulation.execute_simulation() #Language and Currency selection needs to be implemented; currently using standard values
+    elif user_choice == 2:
+        raise NotImplementedError(f"Simulation is not implemented yet. {user_choice = }")
+    elif user_choice == 3:
+        raise NotImplementedError(f"Simulation is not implemented yet. {user_choice = }")
+    else:
+        logger.error(
+            f"Unhandled and invalid mode selection made by user. Mode selection: {user_choice}"
+        )
+
 
 def run_simulation_interface():
-    configure_logging()
-    logger = logging.getLogger(__name__)
-
     settings: dict = utils.load_settings()  # type: ignore
     ui_text: dict = utils.load_text_json(language=settings["ui"]["language"], interface="homescreen", filename="ui_text")  # type: ignore
     logger.debug(f"Loaded settings and UI text.")
@@ -59,20 +70,16 @@ def run_simulation_interface():
         print(dialogue)
     input(ui_text["user_confirmation"])
     os.system("cls" if os.name == "nt" else "clear")
-    if user_choice == 0:
-        wealth_projection.execute_simulation()
-    elif user_choice == 1:
-        credit_simulation.execute_simulation()
-    elif user_choice == 2:
-        pass
-    elif user_choice == 3:
-        pass
-    else:
-        logger.error(
-            f"Unhandled and invalid mode selection made by user. Mode selection: {user_choice}"
-        )
-        quit()
+    try:
+        execute_selected_simulation(user_choice)
+    except NotImplementedError as e:
+        logger.error(f"Not implemented: {e}")
 
 
 if __name__ == "__main__":
-    run_simulation_interface()
+    print("...")
+    configure_logging()
+    logger = logging.getLogger(__name__)
+    while True:
+        os.system("cls" if os.name == "nt" else "clear")
+        run_simulation_interface()
