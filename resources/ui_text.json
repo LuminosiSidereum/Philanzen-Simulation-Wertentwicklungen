@@ -32,7 +32,17 @@
                 "line_2": "Die monatlichen Zinszahlungen übersteigen die Abzahlungsrate.",
                 "line_3": "Bitte passen Sie die monatliche Abzahlungsrate an und versuchen Sie es erneut."
             },
+            "credit_summary":{
+                "line_1": "Zusammenfassung der Kreditdetails",
+                "line_2": "Kreditbetrag",
+                "line_3": "Zinssatz | % : ",
+                "line_4": "Laufzeit | Monaten : ",
+                "line_5": "Monatliche Abzahlungsrate",
+                "line_6": "Gesamtzins",
+                "line_7": "Gesamtkosten"
+            },
+            "return_to_homescreen": "Um zurück zum Hauptmenü zu gelangen, drücken Sie die Eingabetaste."
+        },
             "wealth_projection": {}
-        }
     }
 }

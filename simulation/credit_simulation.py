@@ -2,6 +2,7 @@ import pandas as pd  # type: ignore
 from pandas import DataFrame  # type: ignore
 import logging
 import numpy as np
+import os
 from simulation import utils
 
 logger = logging.getLogger(__name__)
@@ -39,9 +40,6 @@ def _input_downpayment_monthly(
                 print(dialog)
             print(
                 f"{ui_text["credit_interest_monthly"]}: {interest_amount:.2f} {currency}"
-            )
-            print(
-                f"{ui_text["credit_downpayment_monthly"]}: {repayment:.2f} {currency}"
             )
         else:
             return repayment
@@ -169,7 +167,7 @@ def _calculation_selection(ui_text: dict) -> int:
 
 def _execute_calculation_downpayment(
     credit: float, interest: float, repayment: float, currency: str = "EUR"
-) -> None:
+) -> list:
     """
     Executes the calculation of a credit downpayment plan and generates a summary.
     This function calculates the monthly downpayment values for a given credit amount,
@@ -190,7 +188,14 @@ def _execute_calculation_downpayment(
         - The resulting DataFrames are saved to CSV files with filenames specified in the 
           JSON configuration.
     Returns:
-        None
+        list: A list containing the summarized credit details, including:
+        - credit amount (float)
+        - interest rate (float)
+        - duration (int)
+        - monthly downpayment (float)
+        - total interest (float)
+        - total cost (float)
+        - currency (str)
     """
     
     # Load your text configuration
@@ -220,11 +225,11 @@ def _execute_calculation_downpayment(
     df_credit_simulation = pd.DataFrame(
         data=[[0, credit, 0, 0]], columns=col_names_simulation
     )
-    df_credit_simulation = df_credit_simulation.astype({col_names_simulation[0]: int})
     logger.debug(f"DataFrame created:\n{df_credit_simulation.head()}")
 
     # Calculate the monthly downpayment values until the remaining credit balance is less than the repayment amount
     # The last row of the DataFrame is used to check if the remaining credit balance is greater than the repayment amount
+    print("...")
     while df_credit_simulation.iloc[-1][col_names_simulation[1]] > repayment:
         df_credit_simulation = _credit_calculation_downpayment_monthly_values(
             df_credit=df_credit_simulation,
@@ -244,12 +249,13 @@ def _execute_calculation_downpayment(
     # Summary of the credit details
     # Validate and extract colum names for the summary
     plan_keys = [
-        "credit_amount",
-        "duration",
-        "monthly_downpayment",
-        "total_interest",
-        "total_cost",
-        "currency"
+        "credit_amount", #0 (float)
+        "interest_rate", #1 (float)
+        "duration", #2 (int)
+        "monthly_downpayment", #3 (float)
+        "total_interest", #4 (float)
+        "total_cost", #5 (float)
+        "currency" #6 (str)
     ]
     try:
         col_names_summary: list[str] = [
@@ -266,6 +272,7 @@ def _execute_calculation_downpayment(
         data=[
             [
                 credit,
+                interest,
                 df_credit_simulation.iloc[-1][col_names_simulation[0]],
                 repayment,
                 df_credit_simulation[col_names_simulation[2]].sum().round(2),
@@ -275,7 +282,7 @@ def _execute_calculation_downpayment(
         ],
         columns=col_names_summary,
     )
-    df_credit_summary = df_credit_summary.astype({col_names_summary[1]: int})
+    df_credit_summary = df_credit_summary.astype({col_names_summary[2]: int})
     
     # Save the DataFrames to CSV files
     utils.save_dataframe_to_csv(
@@ -284,7 +291,8 @@ def _execute_calculation_downpayment(
     utils.save_dataframe_to_csv(
         df=df_credit_summary, filename=output_text["file_name_credit_summary"]
     )
-
+    
+    return df_credit_summary.iloc[0].values.tolist()
 
 def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
     """
@@ -312,10 +320,22 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
             ui_text=ui_text,
             currency=currency,
         )
-        _execute_calculation_downpayment(
+        summary: list = _execute_calculation_downpayment(
             credit_amout, interest_rate, downpayment, currency
         )
-
+        os.system("cls" if os.name == "nt" else "clear")
+        for i, dialog in enumerate(ui_text["credit_summary"].values()):
+            if i == 0:
+                print(dialog)
+                continue
+            if i == 2 or i == 3:
+                print(f"{dialog}{summary[i-1]}")
+                continue
+            print(f"{dialog} | {currency}: {summary[i-1]}")
+            
+        input(ui_text["return_to_homescreen"])
+        logging.info("User returned to the homescreen after successfull simulation.")
+        return
     elif calculation_selection == 1:
         duration: int = utils.user_input_int(
             ui_text["credit_duration"], ui_text["invalid_input"]
