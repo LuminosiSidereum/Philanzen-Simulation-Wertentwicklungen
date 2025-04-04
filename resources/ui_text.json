@@ -10,7 +10,17 @@
             },
             "mode_selection_input": "Bitte Nummer eingeben: ",
             "invalid_mode_selection": "Ungültige Eingabe. Bitte wählen Sie eine gültige Nummer aus.",
-            "invalid_input": "Ungültige Eingabe. Bitte geben sie eine gültige Zahl ein."
+            "invalid_input": "Ungültige Eingabe. Bitte geben sie eine gültige Zahl ein.",
+            "general_input_information":{
+                "line_1": "Bitte geben Sie alle Zahlen ohne Einheiten und Währungszeichen ein.",
+                "line_2": "Beispiel: 1000 für 1000 Euro",
+                "line_3": "Beispiel: 1.5 für 1,5 %",
+                "line_4": "Als Deziamltrennzeichen verwenden Sie bitte den Punkt (.)",
+                "line_5": "Beispiel: 1.5 für 1,5",
+                "line_6": "Als Tausenddelimiter verwenden Sie bitte den Unterstich (_).",
+                "line_7": "Beispiel: 1_000 für 1000"
+            },
+            "user_confirmation":"Zum Fortfahren drücken Sie die Eingabetaste."
         },
         "credit_simulation": {
             "welcome_text": {

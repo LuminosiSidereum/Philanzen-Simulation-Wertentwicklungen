@@ -55,6 +55,10 @@ def run_simulation_interface():
 
     user_choice = select_simulation(ui_text=ui_text)
     os.system("cls" if os.name == "nt" else "clear")
+    for dialogue in ui_text["general_input_information"].values():
+        print(dialogue)
+    input(ui_text["user_confirmation"])
+    os.system("cls" if os.name == "nt" else "clear")
     if user_choice == 0:
         wealth_projection.execute_simulation()
     elif user_choice == 1:
