@@ -1,6 +1,8 @@
 from pathlib import Path
 import logging
 import json
+import pandas as pd
+from pandas import DataFrame
 
 # Variables
 global_variables: dict = {"root_path": None}
@@ -88,3 +90,18 @@ def user_input_int(ui_text_input_request: str, ui_text_invalid_input: str) -> in
             return user_input
         except ValueError:
             print(ui_text_invalid_input)
+            
+def save_dataframe_to_csv(df: DataFrame, filename: str) -> None:
+    """
+    Save a DataFrame to a CSV file.
+
+    Args:
+        df (pd.DataFrame): The DataFrame to save.
+        filename (str): The name of the file to save the DataFrame to.
+    """
+    try:
+        file_path = global_variables["root_path"]/"data"/"output"/f"{filename}.csv"
+        df.to_csv(file_path, index=False)
+        logger.info(f"DataFrame saved to {file_path}")
+    except Exception as e:
+        logger.error(f"Error saving DataFrame to CSV: {e}")
