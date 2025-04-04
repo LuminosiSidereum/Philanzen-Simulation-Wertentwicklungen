@@ -10,7 +10,9 @@ global_variables: dict = {"root_path": None}
 # Initalize base logic for the libary
 logger = logging.getLogger(__name__)
 global_variables["root_path"] = Path(__file__).parent.parent
-logger.debug(f"Root path set to {global_variables['root_path']}. This is the path to the root of the project.")
+logger.debug(
+    f"Root path set to {global_variables['root_path']}. This is the path to the root of the project."
+)
 
 
 # MARK: Functions
