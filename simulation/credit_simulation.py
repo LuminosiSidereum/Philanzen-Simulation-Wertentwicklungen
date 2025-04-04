@@ -37,9 +37,7 @@ def _credit_calculation_downpayment_monthly_values(
 ) -> DataFrame:
     current_credit_balance: float = df_credit.iloc[-1][col_names[1]]
     # Calculates the interest amount
-    interest_amount: float =  current_credit_balance*(
-        interest / 100 / 12
-    )
+    interest_amount: float = current_credit_balance * (interest / 100 / 12)
     # Calculates the remaining credit balance
     # The remaining credit balance is the current credit balance plus the interest amount minus the repayment amount
     remaining_credit_balance: float = np.subtract(
@@ -47,12 +45,14 @@ def _credit_calculation_downpayment_monthly_values(
     )
     # Creates a new DataFrame with the new values
     df_new_values = pd.DataFrame(
-        data=[[
-            df_credit.iloc[-1][col_names[0]] + 1,
-            remaining_credit_balance,
-            interest_amount,
-            repayment,
-        ]],
+        data=[
+            [
+                df_credit.iloc[-1][col_names[0]] + 1,
+                remaining_credit_balance,
+                interest_amount,
+                repayment,
+            ]
+        ],
         columns=col_names,
     )
     # Concatenates the new DataFrame with the old one
@@ -70,12 +70,14 @@ def _credit_calculation_downpayment_final_payment(
     final_payment: float = np.add(current_credit_balance, interest_amount)
     # Creates a new DataFrame with the new values
     df_new_values = pd.DataFrame(
-        data=[[
-            df_credit.iloc[-1][col_names[0]] + 1,
-            0,
-            interest_amount,
-            final_payment,
-        ]],
+        data=[
+            [
+                df_credit.iloc[-1][col_names[0]] + 1,
+                0,
+                interest_amount,
+                final_payment,
+            ]
+        ],
         columns=col_names,
     )
     # Concatenates the new DataFrame with the old one
@@ -125,7 +127,7 @@ def _execute_calculation_downpayment(
     df_credit_monthly = pd.DataFrame(data=[[0, credit, 0, 0]], columns=col_names)
 
     logger.debug(f"DataFrame created:\n{df_credit_monthly.head()}")
-    
+
     while df_credit_monthly.iloc[-1][col_names[1]] > repayment:
         df_credit_monthly = _credit_calculation_downpayment_monthly_values(
             df_credit=df_credit_monthly,
@@ -176,79 +178,3 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
         duration: int = utils.user_input_int(
             ui_text["credit_duration"], ui_text["invalid_input"]
         )
-
-
-if __name__ == "__main__":
-    Zinsen: float
-    Rückzahlung: float
-    neuerKreditbetrag: float
-
-    # Daten einlesen
-    df_creditdetails = pd.read_csv("data/input/creditdetails.csv")
-    df_creditdaten = pd.DataFrame(
-        columns=["Laufzeit", "Kreditbetrag", "Rückzahlung", "Zinsertrag"]
-    )
-
-    if df_creditdetails.iloc[0]["Kreditbetrag"] > 0:
-        speicherserie = pd.Series(
-            {
-                "Laufzeit": 0,
-                "Kreditbetrag": df_creditdetails.iloc[0]["Kreditbetrag"],
-                "Rückzahlung": 0,
-                "Zinsertrag": 0,
-            }
-        )
-        df_creditdaten = pd.concat([df_creditdaten, speicherserie.to_frame().T])
-    while (
-        df_creditdaten.iloc[-1]["Kreditbetrag"]
-        - df_creditdetails.iloc[0]["Rückzahlung"]
-        > 0
-    ):
-        neuerKreditbetrag, Zinsen = _input_downpayment_monthly(
-            df_creditdaten.iloc[-1]["Kreditbetrag"],
-            df_creditdetails.iloc[-1]["Zinssatz"],
-            df_creditdetails.iloc[-1]["Rückzahlung"],
-        )
-        speicherserie = pd.Series(
-            {
-                "Laufzeit": df_creditdaten.iloc[-1]["Laufzeit"] + 1,
-                "Kreditbetrag": neuerKreditbetrag,
-                "Rückzahlung": df_creditdetails.iloc[-1]["Rückzahlung"],
-                "Zinsertrag": Zinsen,
-            }
-        )
-        df_creditdaten = pd.concat([df_creditdaten, speicherserie.to_frame().T])
-
-    # Restzahlung berechnen
-    Zinsen, Rückzahlung = _credit_calculation_downpayment_final_payment(
-        df_creditdaten.iloc[-1]["Kreditbetrag"], df_creditdetails.iloc[-1]["Zinssatz"]
-    )
-    speicherserie = pd.Series(
-        {
-            "Laufzeit": df_creditdaten.iloc[-1]["Laufzeit"] + 1,
-            "Kreditbetrag": 0,
-            "Rückzahlung": Rückzahlung,
-            "Zinsertrag": Zinsen,
-        }
-    )
-    df_creditdaten = pd.concat([df_creditdaten, speicherserie.to_frame().T])
-
-    # Auswertung der Kreditdaten
-    df_credituebersicht = pd.DataFrame(
-        columns=["GesamtLaufzeit", "GeleisteteZahlungen", "Zinsertrag"]
-    )
-    gesamtlaufzeit: float = df_creditdaten.iloc[-1]["Laufzeit"]
-    geleistetezahlungen: float = df_creditdaten["Rückzahlung"].sum()
-    zinsertrag: float = df_creditdaten["Zinsertrag"].sum()
-    speicherserie = pd.Series(
-        {
-            "GesamtLaufzeit": gesamtlaufzeit,
-            "GeleisteteZahlungen": geleistetezahlungen,
-            "Zinsertrag": zinsertrag,
-        }
-    )
-    df_credituebersicht = pd.concat([df_credituebersicht, speicherserie.to_frame().T])
-
-    # Daten speichern
-    df_creditdaten.to_csv("data/output/creditdaten.csv", index=False)
-    df_credituebersicht.to_csv("data/output/credituebersicht.csv", index=False)
