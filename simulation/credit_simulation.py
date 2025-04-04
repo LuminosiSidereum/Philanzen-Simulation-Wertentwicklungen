@@ -56,7 +56,7 @@ def _credit_calculation_downpayment_monthly_values(
         columns=col_names,
     )
     # Concatenates the new DataFrame with the old one
-    pd.concat([df_credit, df_new_values], ignore_index=True, inplace=True)
+    df_credit = pd.concat([df_credit, df_new_values], ignore_index=True)
     return df_credit
 
 
@@ -65,9 +65,9 @@ def _credit_calculation_downpayment_final_payment(
 ) -> DataFrame:
     current_credit_balance: float = df_credit.iloc[-1][col_names[1]]
     # Calculates the interest amount
-    interest_amount: float = current_credit_balance * (interest / 100 / 12)
+    interest_amount: float = round(current_credit_balance * (interest / 100 / 12),2)
     # Calculates the final payment amount
-    final_payment: float = np.add(current_credit_balance, interest_amount)
+    final_payment: float = round(np.add(current_credit_balance, interest_amount),2)
     # Creates a new DataFrame with the new values
     df_new_values = pd.DataFrame(
         data=[
@@ -81,7 +81,7 @@ def _credit_calculation_downpayment_final_payment(
         columns=col_names,
     )
     # Concatenates the new DataFrame with the old one
-    pd.concat([df_credit, df_new_values], ignore_index=True, inplace=True)
+    df_credit = pd.concat([df_credit, df_new_values], ignore_index=True)
     return df_credit
 
 
@@ -114,7 +114,7 @@ def _execute_calculation_downpayment(
     ]
     try:
         col_names_simulation: list[str] = [
-            output_text["downpayment_plan"][key] for key in plan_keys
+            output_text[key] for key in plan_keys
         ]
         logger.debug(f"Resolved column names: {col_names_simulation}")
     except KeyError as e:
@@ -127,7 +127,7 @@ def _execute_calculation_downpayment(
     df_credit_simulation = pd.DataFrame(
         data=[[0, credit, 0, 0]], columns=col_names_simulation
     )
-
+    df_credit_simulation = df_credit_simulation.astype({col_names_simulation[0]: int})
     logger.debug(f"DataFrame created:\n{df_credit_simulation.head()}")
 
     while df_credit_simulation.iloc[-1][col_names_simulation[1]] > repayment:
@@ -152,11 +152,12 @@ def _execute_calculation_downpayment(
         "duration",
         "monthly_downpayment",
         "total_interest",
-        "total_cost" "currency",
+        "total_cost",
+        "currency"
     ]
     try:
         col_names_summary: list[str] = [
-            output_text["downpayment_plan"][key] for key in plan_keys
+            output_text[key] for key in plan_keys
         ]
         logger.debug(f"Resolved column names: {col_names_summary}")
     except KeyError as e:
@@ -170,16 +171,15 @@ def _execute_calculation_downpayment(
                 credit,
                 df_credit_simulation.iloc[-1][col_names_simulation[0]],
                 repayment,
-                df_credit_simulation[col_names_simulation[2]].sum(),
-                df_credit_simulation[col_names_simulation[2]].sum() + credit,
+                df_credit_simulation[col_names_simulation[2]].sum().round(2),
+                df_credit_simulation[col_names_simulation[2]].sum().round(2) + credit,
                 currency,
             ]
         ],
         columns=col_names_summary,
     )
-    # Set the index to duration
-    df_credit_simulation.set_index(col_names_simulation[0], inplace=True)
-    df_credit_summary.set_index(col_names_summary[1], inplace=True)
+    df_credit_summary = df_credit_summary.astype({col_names_summary[1]: int})
+    
     # Save the DataFrames to CSV files
     utils.save_dataframe_to_csv(
         df=df_credit_simulation, filename=output_text["file_name_credit_simulation"]

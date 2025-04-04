@@ -6,10 +6,10 @@
                 "interest_rate": "Zinssatz",
                 "credit_amount": "Kreditbetrag",
                 "total_interest": "Gesamtzinsen",
-                "total_costs": "Gesamtkosten",
+                "total_cost": "Gesamtkosten",
                 "duration": "Laufzeit",
                 "monthly_downpayment": "Monatliche Abzahlungsrate",
-                "curreny": "Währung",
+                "currency": "Währung",
                 "file_name_credit_simulation": "kredit_simulation_monatliche_abzahlung",
                 "file_name_credit_summary": "kredit_simulation_zusammenfassung"
             }
