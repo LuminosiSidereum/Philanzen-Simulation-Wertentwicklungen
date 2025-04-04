@@ -101,22 +101,22 @@ def _execute_calculation_downpayment(
     credit: float, interest: float, repayment: float, currency: str = "EUR"
 ) -> None:
     # Load your text configuration
-    output_columns = utils.load_text_json(
+    output_text: dict = utils.load_text_json(
         language="de", interface="credit_simulation", filename="output_text"
     )
 
     # Validate and extract colum names
-    plan_keys = [
+    plan_keys: list = [
         "duration",
         "remaining_credit",
         "interest_payment",
         "monthly_downpayment",
     ]
     try:
-        col_names: list[str] = [
-            output_columns["downpayment_plan"][key] for key in plan_keys
+        col_names_simulation: list[str] = [
+            output_text["downpayment_plan"][key] for key in plan_keys
         ]
-        logger.debug(f"Resolved column names: {col_names}")
+        logger.debug(f"Resolved column names: {col_names_simulation}")
     except KeyError as e:
         msg = f"Missing expected key in JSON: {e}"
         logger.error(msg)
@@ -124,25 +124,27 @@ def _execute_calculation_downpayment(
 
     # Create DataFrame
     logger.info(f"Creating calculation_downpayment DataFrame ({credit = })")
-    df_credit_monthly = pd.DataFrame(data=[[0, credit, 0, 0]], columns=col_names)
+    df_credit_simulation = pd.DataFrame(
+        data=[[0, credit, 0, 0]], columns=col_names_simulation
+    )
 
-    logger.debug(f"DataFrame created:\n{df_credit_monthly.head()}")
+    logger.debug(f"DataFrame created:\n{df_credit_simulation.head()}")
 
-    while df_credit_monthly.iloc[-1][col_names[1]] > repayment:
-        df_credit_monthly = _credit_calculation_downpayment_monthly_values(
-            df_credit=df_credit_monthly,
-            col_names=col_names,
+    while df_credit_simulation.iloc[-1][col_names_simulation[1]] > repayment:
+        df_credit_simulation = _credit_calculation_downpayment_monthly_values(
+            df_credit=df_credit_simulation,
+            col_names=col_names_simulation,
             interest=interest,
             repayment=repayment,
         )
-        logger.debug(f"Updated DataFrame:\n{df_credit_monthly.tail()}")
-    df_credit_monthly = _credit_calculation_downpayment_final_payment(
-        df_credit=df_credit_monthly,
-        col_names=col_names,
+        logger.debug(f"Updated DataFrame:\n{df_credit_simulation.tail()}")
+    df_credit_simulation = _credit_calculation_downpayment_final_payment(
+        df_credit=df_credit_simulation,
+        col_names=col_names_simulation,
         interest=interest,
     )
-    logger.debug(f"Final DataFrame:\n{df_credit_monthly.tail()}")
-    
+    logger.debug(f"Final DataFrame:\n{df_credit_simulation.tail()}")
+
     # Summary of the credit details
     # Validate and extract colum names for the summary
     plan_keys = [
@@ -150,14 +152,13 @@ def _execute_calculation_downpayment(
         "duration",
         "monthly_downpayment",
         "total_interest",
-        "total_cost"
-        "currency"
+        "total_cost" "currency",
     ]
     try:
         col_names_summary: list[str] = [
-            output_columns["downpayment_plan"][key] for key in plan_keys
+            output_text["downpayment_plan"][key] for key in plan_keys
         ]
-        logger.debug(f"Resolved column names: {col_names}")
+        logger.debug(f"Resolved column names: {col_names_summary}")
     except KeyError as e:
         msg = f"Missing expected key in JSON: {e}"
         logger.error(msg)
@@ -167,16 +168,27 @@ def _execute_calculation_downpayment(
         data=[
             [
                 credit,
-                df_credit_monthly.iloc[-1][col_names[0]],
+                df_credit_simulation.iloc[-1][col_names_simulation[0]],
                 repayment,
-                df_credit_monthly[col_names[2]].sum(),
-                df_credit_monthly[col_names[2]].sum()+credit,
-                currency
+                df_credit_simulation[col_names_simulation[2]].sum(),
+                df_credit_simulation[col_names_simulation[2]].sum() + credit,
+                currency,
             ]
         ],
-        columns=col_names,
+        columns=col_names_summary,
     )
-    
+    # Set the index to duration
+    df_credit_simulation.set_index(col_names_simulation[0], inplace=True)
+    df_credit_summary.set_index(col_names_summary[1], inplace=True)
+    # Save the DataFrames to CSV files
+    utils.save_dataframe_to_csv(
+        df=df_credit_simulation, filename=output_text["file_name_credit_simulation"]
+    )
+    utils.save_dataframe_to_csv(
+        df=df_credit_summary, filename=output_text["file_name_credit_summary"]
+    )
+
+
 def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
     """
     Execute the credit simulation.
