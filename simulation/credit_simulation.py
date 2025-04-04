@@ -72,7 +72,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
             credit=creit_amout, interest=interest_rate, ui_text=ui_text, currency=currency
         )
     elif calculation_selection == 1:
-        duration: int = utils.user_input_float(
+        duration: int = utils.user_input_int(
             ui_text["credit_duration"], ui_text["invalid_input"]
         )
 
