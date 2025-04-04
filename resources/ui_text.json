@@ -13,17 +13,26 @@
             "invalid_input": "Ungültige Eingabe. Bitte geben sie eine gültige Zahl ein."
         },
         "credit_simulation": {
-            "welcome_message": "Bitte halten Sie die Kreditdetails (Kreditbetrag, Zinssatz, Laufzeit in Monaten ein oder die monatliche Abzahlung) parat.",
-            "user_input_calculation_selection": "Vor der Berechnung müssen Sie auswählen, ob Sie die monatliche Abzahlung (0) oder die Laufzeit in Monaten (1) berechnen möchten: (0/1) ",
+            "welcome_text": {
+                "line_1": "Bitte halten Sie die Kreditdetails (Kreditbetrag, Zinssatz, Laufzeit in Monaten ein oder die monatliche Abzahlung) parat.",
+                "line_2": "Die Währung für ihre Berechnungen ist:"
+            },
+            "user_input_calculation_selection": "Vor der Berechnung müssen Sie auswählen, ob Sie die monatliche Abzahlung (0) oder die Laufzeit in Monaten (1) bei der Berechnung verwenden möchten: (0/1) ",
             "user_input_credit_details": "Bitte geben Sie nun die Kreditdetails als Zahl ein.",
             "credit_amount": "Kreditbetrag: ",
             "credit_interest_rate": "Zinssatz | % : ",
+            "credit_interest_monthly": "Monatliche Zinszahlung: ",
             "credit_duration": "Laufzeit: ",
             "credit_downpayment_monthly": "Monatliche Abzahlungsrate: ",
             "credit_total_interest": "Gesamtzins: ",
             "credit_total_costs": "Gesamtkosten: ",
-            "invalid_input": "Ungültige Eingabe. Bitte geben sie eine gültige Zahl ein."
-        },
-        "wealth_projection": {}
+            "invalid_input": "Ungültige Eingabe. Bitte geben sie eine gültige Zahl ein.",
+            "input_downpayment_monthly": {
+                "line_1": "Die aktuellen Eingaben machen eine Rückzahlung unmöglich!",
+                "line_2": "Die monatlichen Zinszahlungen übersteigen die Abzahlungsrate.",
+                "line_3": "Bitte passen Sie die monatliche Abzahlungsrate an und versuchen Sie es erneut."
+            },
+            "wealth_projection": {}
+        }
     }
 }

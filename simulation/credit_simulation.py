@@ -1,22 +1,35 @@
 import pandas as pd  # type: ignore
 import numpy as np
-from simulation import utils
+import utils
 
 
-def _kreditberechnung(
-    Kreditbetrag: float, Zinssatz: float, Rückzahlung: float
+def _input_downpayment_monthly(credit: float, interest: float, ui_text: dict, currency: str = "EUR") -> float:
+    # Claculates the interest amount for the first month
+    interest_amount: float = credit * (interest / 100 / 12)
+    print(f"{ui_text["credit_interest_monthly"]}: {interest_amount:.2f}")
+    # Asks the user for the monthly repayment amount and checks if it is smaller than the interest amount
+    # If it is, it asks for the amount again and prints the interest amount as wekk as the repayment amount
+    while True:
+        repayment: float = utils.user_input_float(
+            ui_text["credit_downpayment_monthly"], ui_text["invalid_input"]
+        )
+        if repayment < interest_amount:
+            for dialog in ui_text["input_downpayment_monthly"].values():
+                print(dialog)
+            print(f"{ui_text["credit_interest_monthly"]}: {interest_amount:.2f} {currency}")
+            print(f"{ui_text["credit_downpayment_monthly"]}: {repayment:.2f} {currency}")
+        else:
+            return repayment
+
+
+def _credit_downpayment_calculation(
+    credit: float, interest: float, repayment: float
 ) -> tuple[float, float]:
-    Zinsen: float = Kreditbetrag * (Zinssatz / 100 / 12)
-    if Zinsen > Rückzahlung:
-        print(
-            f"Rückzahlung reicht nicht aus, um die Zinsen von {Zinsen:.2f}€ zu decken."
-        )
-        print(
-            f"Bitte erhöhen Sie die Rückzahlung so, dass diese über den Zinsen liegt."
-        )
-        quit()
-    neuerKreditbetrag: float = np.subtract(np.add(Kreditbetrag, Zinsen), Rückzahlung)
-    return neuerKreditbetrag, Zinsen
+    interest_amount: float = credit * (interest / 100 / 12)
+    remaining_credit_balance: float = np.subtract(
+        np.add(credit, interest_amount), repayment
+    )
+    return remaining_credit_balance, interest_amount
 
 
 def _restzahlung(Kreditbetrag: float, Zinssatz: float) -> tuple[float, float]:
@@ -24,32 +37,44 @@ def _restzahlung(Kreditbetrag: float, Zinssatz: float) -> tuple[float, float]:
     Rückzahlung: float = np.add(Kreditbetrag, Zinsen)
     return Zinsen, Rückzahlung
 
+
 def _calculation_selection(ui_text: dict) -> int:
     while True:
         try:
             user_input = int(input(ui_text["user_input_calculation_selection"]))
-            if user_input in [0,1]:
+            if user_input in [0, 1]:
                 return user_input
             else:
                 print(ui_text["invalid_input"])
         except ValueError:
             print(ui_text["invalid_input"])
 
-def execute_simulation(language: str = "de") -> None:
+
+def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
     """
     Execute the credit simulation.
     """
-    ui_text = utils.load_ui_text(language=language, interface="credit_simulation")
-    print(ui_text["welcome_message"])
-    calculation_selection = _calculation_selection(ui_text)
-    
-    creit_amout = utils.user_input_float(ui_text["credit_amount"], ui_text["invalid_input"])   
-    interest_rate = utils.user_input_float(ui_text["credit_interest_rate"], ui_text["invalid_input"])   
-    
+    ui_text: dict = utils.load_ui_text(language=language, interface="credit_simulation")
+    for dialog in ui_text["welcome_text"].values():
+        print(dialog)
+    print(f"{currency}")
+    calculation_selection: int = _calculation_selection(ui_text)
+
+    creit_amout: float = utils.user_input_float(
+        ui_text["credit_amount"], ui_text["invalid_input"]
+    )
+    interest_rate: float = utils.user_input_float(
+        ui_text["credit_interest_rate"], ui_text["invalid_input"]
+    )
+
     if calculation_selection == 0:
-        downpayment = utils.user_input_float(ui_text["credit_downpayment_monthly"], ui_text["invalid_input"])
+        downpayment: float = _input_downpayment_monthly(
+            credit=creit_amout, interest=interest_rate, ui_text=ui_text, currency=currency
+        )
     elif calculation_selection == 1:
-        downpayment = utils.user_input_float(ui_text["credit_duration"], ui_text["invalid_input"])
+        duration: int = utils.user_input_float(
+            ui_text["credit_duration"], ui_text["invalid_input"]
+        )
 
 
 if __name__ == "__main__":
@@ -78,7 +103,7 @@ if __name__ == "__main__":
         - df_creditdetails.iloc[0]["Rückzahlung"]
         > 0
     ):
-        neuerKreditbetrag, Zinsen = _kreditberechnung(
+        neuerKreditbetrag, Zinsen = _input_downpayment_monthly(
             df_creditdaten.iloc[-1]["Kreditbetrag"],
             df_creditdetails.iloc[-1]["Zinssatz"],
             df_creditdetails.iloc[-1]["Rückzahlung"],
