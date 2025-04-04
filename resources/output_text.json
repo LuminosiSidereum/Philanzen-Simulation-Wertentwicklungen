@@ -1,0 +1,14 @@
+{
+    "de": {
+        "credit_simulation": {
+                "remaining_credit": "Restschuld",
+                "interest_payment": "Zinszahlung",
+                "credit_amount": "Kreditbetrag",
+                "total_interest": "Gesamtzinsen",
+                "total_costs": "Gesamtkosten",
+                "duration": "Laufzeit",
+                "monthly_downpayment": "Monatliche Abzahlungsrate"
+            }
+        },
+        "wealth_projection": {}
+    }

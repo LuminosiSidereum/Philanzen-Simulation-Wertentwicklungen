@@ -1,9 +1,14 @@
 import pandas as pd  # type: ignore
+import logging
 import numpy as np
-import utils
+from simulation import utils
+
+logger = logging.getLogger(__name__)
 
 
-def _input_downpayment_monthly(credit: float, interest: float, ui_text: dict, currency: str = "EUR") -> float:
+def _input_downpayment_monthly(
+    credit: float, interest: float, ui_text: dict, currency: str = "EUR"
+) -> float:
     # Claculates the interest amount for the first month
     interest_amount: float = credit * (interest / 100 / 12)
     print(f"{ui_text["credit_interest_monthly"]}: {interest_amount:.2f}")
@@ -16,13 +21,17 @@ def _input_downpayment_monthly(credit: float, interest: float, ui_text: dict, cu
         if repayment < interest_amount:
             for dialog in ui_text["input_downpayment_monthly"].values():
                 print(dialog)
-            print(f"{ui_text["credit_interest_monthly"]}: {interest_amount:.2f} {currency}")
-            print(f"{ui_text["credit_downpayment_monthly"]}: {repayment:.2f} {currency}")
+            print(
+                f"{ui_text["credit_interest_monthly"]}: {interest_amount:.2f} {currency}"
+            )
+            print(
+                f"{ui_text["credit_downpayment_monthly"]}: {repayment:.2f} {currency}"
+            )
         else:
             return repayment
 
 
-def _credit_downpayment_calculation(
+def _credit_calculation_downpayment_monthly_values(
     credit: float, interest: float, repayment: float
 ) -> tuple[float, float]:
     interest_amount: float = credit * (interest / 100 / 12)
@@ -32,10 +41,12 @@ def _credit_downpayment_calculation(
     return remaining_credit_balance, interest_amount
 
 
-def _restzahlung(Kreditbetrag: float, Zinssatz: float) -> tuple[float, float]:
-    Zinsen: float = Kreditbetrag * (Zinssatz / 100 / 12)
-    Rückzahlung: float = np.add(Kreditbetrag, Zinsen)
-    return Zinsen, Rückzahlung
+def _credit_calculation_downpayment_final_payment(
+    credit: float, interest: float
+) -> tuple[float, float]:
+    interest_amount: float = credit * (interest / 100 / 12)
+    final_payment: float = np.add(credit, interest_amount)
+    return final_payment, interest_amount
 
 
 def _calculation_selection(ui_text: dict) -> int:
@@ -50,17 +61,51 @@ def _calculation_selection(ui_text: dict) -> int:
             print(ui_text["invalid_input"])
 
 
+def _execute_calculation_downpayment(
+    credit: float, interest: float, repayment: float, currency: str = "EUR"
+) -> None:
+    # Load your text configuration
+    output_columns = utils.load_text_json(
+        language="de", interface="credit_simulation", filename="output_text"
+    )
+
+    # Validate and extract colum names
+    plan_keys = [
+        "duration",
+        "remaining_credit",
+        "interest_payment",
+        "monthly_downpayment",
+    ]
+    try:
+        col_names: list[str] = [
+            output_columns["downpayment_plan"][key] for key in plan_keys
+        ]
+        logger.debug(f"Resolved column names: {col_names}")
+    except KeyError as e:
+        msg = f"Missing expected key in JSON: {e}"
+        logger.error(msg)
+        raise ValueError(msg)
+
+    # Create DataFrame
+    logger.info(f"Creating calculation_downpayment DataFrame ({credit = })")
+    df = pd.DataFrame(data=[[0, credit, 0, 0]], columns=col_names)
+
+    logger.debug(f"DataFrame created:\n{df.head()}")
+
+
 def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
     """
     Execute the credit simulation.
     """
-    ui_text: dict = utils.load_ui_text(language=language, interface="credit_simulation")
+    ui_text: dict = utils.load_text_json(
+        language=language, interface="credit_simulation", filename="ui_text"
+    )
     for dialog in ui_text["welcome_text"].values():
         print(dialog)
     print(f"{currency}")
     calculation_selection: int = _calculation_selection(ui_text)
 
-    creit_amout: float = utils.user_input_float(
+    credit_amout: float = utils.user_input_float(
         ui_text["credit_amount"], ui_text["invalid_input"]
     )
     interest_rate: float = utils.user_input_float(
@@ -69,8 +114,15 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
 
     if calculation_selection == 0:
         downpayment: float = _input_downpayment_monthly(
-            credit=creit_amout, interest=interest_rate, ui_text=ui_text, currency=currency
+            credit=credit_amout,
+            interest=interest_rate,
+            ui_text=ui_text,
+            currency=currency,
         )
+        _execute_calculation_downpayment(
+            credit_amout, interest_rate, downpayment, currency
+        )
+
     elif calculation_selection == 1:
         duration: int = utils.user_input_int(
             ui_text["credit_duration"], ui_text["invalid_input"]
@@ -119,7 +171,7 @@ if __name__ == "__main__":
         df_creditdaten = pd.concat([df_creditdaten, speicherserie.to_frame().T])
 
     # Restzahlung berechnen
-    Zinsen, Rückzahlung = _restzahlung(
+    Zinsen, Rückzahlung = _credit_calculation_downpayment_final_payment(
         df_creditdaten.iloc[-1]["Kreditbetrag"], df_creditdetails.iloc[-1]["Zinssatz"]
     )
     speicherserie = pd.Series(
