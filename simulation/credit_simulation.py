@@ -142,8 +142,41 @@ def _execute_calculation_downpayment(
         interest=interest,
     )
     logger.debug(f"Final DataFrame:\n{df_credit_monthly.tail()}")
-
-
+    
+    # Summary of the credit details
+    # Validate and extract colum names for the summary
+    plan_keys = [
+        "credit_amount",
+        "duration",
+        "monthly_downpayment",
+        "total_interest",
+        "total_cost"
+        "currency"
+    ]
+    try:
+        col_names_summary: list[str] = [
+            output_columns["downpayment_plan"][key] for key in plan_keys
+        ]
+        logger.debug(f"Resolved column names: {col_names}")
+    except KeyError as e:
+        msg = f"Missing expected key in JSON: {e}"
+        logger.error(msg)
+        raise ValueError(msg)
+    # Create a new DataFrame that summarizes the credit details
+    df_credit_summary = pd.DataFrame(
+        data=[
+            [
+                credit,
+                df_credit_monthly.iloc[-1][col_names[0]],
+                repayment,
+                df_credit_monthly[col_names[2]].sum(),
+                df_credit_monthly[col_names[2]].sum()+credit,
+                currency
+            ]
+        ],
+        columns=col_names,
+    )
+    
 def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
     """
     Execute the credit simulation.
