@@ -31,8 +31,8 @@ def select_simulation(*, ui_text: dict) -> int:
 
 
 def run_simulation_interface():
-    settings: dict = utils.load_settings() #type: ignore
-    ui_text: dict = utils.load_ui_text(language=settings["ui"]["language"], interface="homescreen")  # type: ignore
+    settings: dict = utils.load_settings()  # type: ignore
+    ui_text: dict = utils.load_text_json(language=settings["ui"]["language"], interface="homescreen", filename="ui_text")  # type: ignore
 
     print(ui_text["mode_selection_request"])
     for mode_name in ui_text["modes"].values():

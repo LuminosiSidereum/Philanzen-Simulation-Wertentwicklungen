@@ -10,22 +10,23 @@ logger = logging.getLogger(__name__)
 global_variables['root_path'] = Path(__file__).parent.parent
 
 #MARK: Functions
-def load_ui_text(*,language: str, interface: str)-> dict:
+def load_text_json(*,language: str, interface: str, filename : str)-> dict:
     """
-    Load UI text from a JSON file based on the specified interface.
+    Load text from a JSON file based on the specified language and interface.
 
     Args:
         language (str): The language code (e.g., "de", "en").
-        interface (str): The name of the interface (e.g., "homescreen","wealth_projection", "credit_simulation").
+        interface (str): The name of the interface (e.g., "homescreen", "wealth_projection", "credit_simulation").
+        filename (str): The name of the JSON file (without extension) to load the text from.
 
     Returns:
-        dict: A dictionary containing the UI text for the specified interface in the proper language.
+        dict: A dictionary containing the text for the specified interface in the proper language.
     """
     try:
-        file_path = global_variables["root_path"]/"resources"/"ui_text.json"
+        file_path = Path(global_variables["root_path"])/ "resources" / f"{filename}.json"
         with open(file_path, 'r', encoding='utf-8') as file:
-            ui_text = json.load(file)
-        return ui_text[language][interface]
+            text = json.load(file)
+        return text[language][interface]
     except FileNotFoundError:
         logger.error(f"File not found: {file_path}")
         return {}
