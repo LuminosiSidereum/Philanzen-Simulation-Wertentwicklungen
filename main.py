@@ -3,18 +3,30 @@ import os
 from simulation import credit_simulation, wealth_projection, utils
 from logging.handlers import TimedRotatingFileHandler
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler("financial_simulations.log"),
-        TimedRotatingFileHandler(
-            "financial_simulations.log", when="midnight", backupCount=7
-        ),
-    ],
-)
-logger = logging.getLogger(__name__)
+# Configure root logger
+def configure_logging():
+    # Get the root logger
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.INFO)  # Set base level for all loggers
+    
+    # Create formatter
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    
+    # File handler with rotation
+    file_handler = TimedRotatingFileHandler(
+        "financial_simulations.log",
+        when="midnight",
+        backupCount=7,
+        encoding='utf-8'
+    )
+    file_handler.setFormatter(formatter)
+    
+    # Add handlers (remove existing ones first to avoid duplicates)
+    for handler in root_logger.handlers[:]:
+        root_logger.removeHandler(handler)
+    root_logger.addHandler(file_handler)
 
 
 # MARK: Functions
@@ -31,9 +43,14 @@ def select_simulation(*, ui_text: dict) -> int:
 
 
 def run_simulation_interface():
+    configure_logging()
+    logger = logging.getLogger(__name__)
+    
     settings: dict = utils.load_settings()  # type: ignore
     ui_text: dict = utils.load_text_json(language=settings["ui"]["language"], interface="homescreen", filename="ui_text")  # type: ignore
-
+    logger.debug(f"Loaded settings and UI text.")
+    
+    logger.info("Starting financial simulations.")
     print(ui_text["mode_selection_request"])
     for mode_name in ui_text["modes"].values():
         print(mode_name)
@@ -56,5 +73,4 @@ def run_simulation_interface():
 
 
 if __name__ == "__main__":
-    logger.info("Starting financial simulations.")
     run_simulation_interface()
