@@ -10,6 +10,21 @@ logger = logging.getLogger(__name__)
 def _input_downpayment_monthly(
     credit: float, interest: float, ui_text: dict, currency: str = "EUR"
 ) -> float:
+    """
+    Prompts the user to input a valid monthly repayment amount for a credit.
+    This function calculates the monthly interest amount based on the provided credit and interest rate.
+    It then repeatedly asks the user for a repayment amount until the input is greater than or equal to 
+    the calculated interest amount. If the repayment amount is insufficient, it displays relevant messages 
+    and prompts the user again.
+    Args:
+        credit (float): The total credit amount.
+        interest (float): The annual interest rate (in percentage).
+        ui_text (dict): A dictionary containing user interface text for prompts and messages.
+        currency (str, optional): The currency symbol to display. Defaults to "EUR".
+    Returns:
+        float: The valid monthly repayment amount entered by the user.
+    """
+    
     # Claculates the interest amount for the first month
     interest_amount: float = credit * (interest / 100 / 12)
     print(f"{ui_text["credit_interest_monthly"]}: {interest_amount:.2f}")
@@ -35,6 +50,24 @@ def _input_downpayment_monthly(
 def _credit_calculation_downpayment_monthly_values(
     df_credit: DataFrame, col_names: list, interest: float, repayment: float
 ) -> DataFrame:
+    """
+    Calculates the monthly values for a credit downpayment simulation and appends the results to the given DataFrame.
+    Args:
+        df_credit (DataFrame): A DataFrame containing the credit simulation data. 
+            The last row represents the current state of the credit.
+        col_names (list): A list of column names for the DataFrame. 
+            Expected order: [month, credit_balance, interest_amount, repayment].
+        interest (float): The annual interest rate (in percentage) applied to the credit balance.
+        repayment (float): The fixed monthly repayment amount.
+    Returns:
+        DataFrame: The updated DataFrame with an additional row containing the calculated values 
+        for the next month:
+            - Incremented month number.
+            - Updated remaining credit balance.
+            - Calculated interest amount for the current month.
+            - Fixed repayment amount.
+    """
+    
     current_credit_balance: float = df_credit.iloc[-1][col_names[1]]
     # Calculates the interest amount
     interest_amount: float = current_credit_balance * (interest / 100 / 12)
@@ -63,6 +96,30 @@ def _credit_calculation_downpayment_monthly_values(
 def _credit_calculation_downpayment_final_payment(
     df_credit: DataFrame, col_names: list, interest: float
 ) -> DataFrame:
+    """
+    Calculates the final payment and updates the credit DataFrame with the new values.
+    This function computes the interest amount and final payment for a credit balance,
+    appends the calculated values as a new row to the provided DataFrame, and returns
+    the updated DataFrame.
+    Args:
+        df_credit (DataFrame): The input DataFrame containing credit information.
+            It is expected to have at least two columns:
+            - col_names[0]: A column representing the current period or step.
+            - col_names[1]: A column representing the current credit balance.
+        col_names (list): A list of column names in the DataFrame. The list should
+            contain at least two elements:
+            - col_names[0]: The name of the column for the period or step.
+            - col_names[1]: The name of the column for the credit balance.
+        interest (float): The annual interest rate (in percentage) used to calculate
+            the interest amount.
+    Returns:
+        DataFrame: The updated DataFrame with an additional row containing:
+            - The next period or step.
+            - A zero value for the downpayment.
+            - The calculated interest amount.
+            - The calculated final payment.
+    """
+    
     current_credit_balance: float = df_credit.iloc[-1][col_names[1]]
     # Calculates the interest amount
     interest_amount: float = round(current_credit_balance * (interest / 100 / 12),2)
@@ -86,6 +143,19 @@ def _credit_calculation_downpayment_final_payment(
 
 
 def _calculation_selection(ui_text: dict) -> int:
+    """
+    Prompts the user to select a calculation option and validates the input.
+    Args:
+        ui_text (dict): A dictionary containing text messages for user interaction.
+            Expected keys:
+                - "user_input_calculation_selection": Prompt message for user input.
+                - "invalid_input": Message displayed when the input is invalid.
+    Returns:
+        int: The user's selection, either 0 or 1.
+    Raises:
+        ValueError: If the input cannot be converted to an integer (handled internally).
+    """
+    
     while True:
         try:
             user_input = int(input(ui_text["user_input_calculation_selection"]))
@@ -100,6 +170,29 @@ def _calculation_selection(ui_text: dict) -> int:
 def _execute_calculation_downpayment(
     credit: float, interest: float, repayment: float, currency: str = "EUR"
 ) -> None:
+    """
+    Executes the calculation of a credit downpayment plan and generates a summary.
+    This function calculates the monthly downpayment values for a given credit amount,
+    interest rate, and repayment amount. It generates a detailed DataFrame of the 
+    downpayment plan and a summary DataFrame of the credit details. Both DataFrames 
+    are saved as CSV files.
+    Args:
+        credit (float): The initial credit amount.
+        interest (float): The annual interest rate (in percentage).
+        repayment (float): The fixed monthly repayment amount.
+        currency (str, optional): The currency of the credit. Defaults to "EUR".
+    Raises:
+        ValueError: If a required key is missing in the JSON configuration file.
+    Notes:
+        - The function uses a JSON configuration file to load text labels for column names.
+        - The calculation continues until the remaining credit balance is less than the 
+          repayment amount, followed by a final payment calculation.
+        - The resulting DataFrames are saved to CSV files with filenames specified in the 
+          JSON configuration.
+    Returns:
+        None
+    """
+    
     # Load your text configuration
     output_text: dict = utils.load_text_json(
         language="de", interface="credit_simulation", filename="output_text"
@@ -120,7 +213,7 @@ def _execute_calculation_downpayment(
     except KeyError as e:
         msg = f"Missing expected key in JSON: {e}"
         logger.error(msg)
-        raise ValueError(msg)
+        raise ValueError
 
     # Create DataFrame
     logger.info(f"Creating calculation_downpayment DataFrame ({credit = })")
@@ -130,6 +223,8 @@ def _execute_calculation_downpayment(
     df_credit_simulation = df_credit_simulation.astype({col_names_simulation[0]: int})
     logger.debug(f"DataFrame created:\n{df_credit_simulation.head()}")
 
+    # Calculate the monthly downpayment values until the remaining credit balance is less than the repayment amount
+    # The last row of the DataFrame is used to check if the remaining credit balance is greater than the repayment amount
     while df_credit_simulation.iloc[-1][col_names_simulation[1]] > repayment:
         df_credit_simulation = _credit_calculation_downpayment_monthly_values(
             df_credit=df_credit_simulation,
@@ -138,6 +233,7 @@ def _execute_calculation_downpayment(
             repayment=repayment,
         )
         logger.debug(f"Updated DataFrame:\n{df_credit_simulation.tail()}")
+    # Calculate the final payment
     df_credit_simulation = _credit_calculation_downpayment_final_payment(
         df_credit=df_credit_simulation,
         col_names=col_names_simulation,
@@ -163,7 +259,8 @@ def _execute_calculation_downpayment(
     except KeyError as e:
         msg = f"Missing expected key in JSON: {e}"
         logger.error(msg)
-        raise ValueError(msg)
+        raise ValueError
+    
     # Create a new DataFrame that summarizes the credit details
     df_credit_summary = pd.DataFrame(
         data=[
