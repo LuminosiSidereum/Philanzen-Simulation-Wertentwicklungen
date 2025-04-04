@@ -35,18 +35,20 @@ def _input_downpayment_monthly(
 def _credit_calculation_downpayment_monthly_values(
     df_credit: DataFrame, col_names: list, interest: float, repayment: float
 ) -> DataFrame:
-    current_credit_balance: float = df_credit.iloc[-1]["remaining_credit"]
+    current_credit_balance: float = df_credit.iloc[-1][col_names[1]]
     # Calculates the interest amount
     interest_amount: float =  current_credit_balance*(
         interest / 100 / 12
     )
+    # Calculates the remaining credit balance
+    # The remaining credit balance is the current credit balance plus the interest amount minus the repayment amount
     remaining_credit_balance: float = np.subtract(
         np.add(current_credit_balance, interest_amount), repayment
     )
     # Creates a new DataFrame with the new values
     df_new_values = pd.DataFrame(
         data=[[
-            df_credit.iloc[-1]["duration"] + 1,
+            df_credit.iloc[-1][col_names[0]] + 1,
             remaining_credit_balance,
             interest_amount,
             repayment,
