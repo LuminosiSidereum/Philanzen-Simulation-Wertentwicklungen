@@ -1,4 +1,5 @@
 import pandas as pd  # type: ignore
+from pandas import DataFrame  # type: ignore
 import logging
 import numpy as np
 from simulation import utils
@@ -32,13 +33,29 @@ def _input_downpayment_monthly(
 
 
 def _credit_calculation_downpayment_monthly_values(
-    credit: float, interest: float, repayment: float
-) -> tuple[float, float]:
-    interest_amount: float = credit * (interest / 100 / 12)
-    remaining_credit_balance: float = np.subtract(
-        np.add(credit, interest_amount), repayment
+    df_credit: DataFrame, col_names: list, interest: float, repayment: float
+) -> DataFrame:
+    current_credit_balance: float = df_credit.iloc[-1]["remaining_credit"]
+    # Calculates the interest amount
+    interest_amount: float =  current_credit_balance*(
+        interest / 100 / 12
     )
-    return remaining_credit_balance, interest_amount
+    remaining_credit_balance: float = np.subtract(
+        np.add(current_credit_balance, interest_amount), repayment
+    )
+    # Creates a new DataFrame with the new values
+    df_new_values = pd.DataFrame(
+        data=[[
+            df_credit.iloc[-1]["duration"] + 1,
+            remaining_credit_balance,
+            interest_amount,
+            repayment,
+        ]],
+        columns=col_names,
+    )
+    # Concatenates the new DataFrame with the old one
+    pd.concat([df_credit, df_new_values], ignore_index=True, inplace=True)
+    return df_credit
 
 
 def _credit_calculation_downpayment_final_payment(
@@ -88,9 +105,19 @@ def _execute_calculation_downpayment(
 
     # Create DataFrame
     logger.info(f"Creating calculation_downpayment DataFrame ({credit = })")
-    df = pd.DataFrame(data=[[0, credit, 0, 0]], columns=col_names)
+    df_credit_monthly = pd.DataFrame(data=[[0, credit, 0, 0]], columns=col_names)
 
-    logger.debug(f"DataFrame created:\n{df.head()}")
+    logger.debug(f"DataFrame created:\n{df_credit_monthly.head()}")
+    
+    while df_credit_monthly.iloc[-1][col_names[1]] > repayment:
+        df_credit_monthly = _credit_calculation_downpayment_monthly_values(
+            df_credit=df_credit_monthly,
+            col_names=col_names,
+            interest=interest,
+            repayment=repayment,
+        )
+        logger.debug(f"Updated DataFrame:\n{df_credit_monthly.tail()}")
+    
 
 
 def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
