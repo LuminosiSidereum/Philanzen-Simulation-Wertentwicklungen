@@ -59,11 +59,26 @@ def _credit_calculation_downpayment_monthly_values(
 
 
 def _credit_calculation_downpayment_final_payment(
-    credit: float, interest: float
-) -> tuple[float, float]:
-    interest_amount: float = credit * (interest / 100 / 12)
-    final_payment: float = np.add(credit, interest_amount)
-    return final_payment, interest_amount
+    df_credit: DataFrame, col_names: list, interest: float
+) -> DataFrame:
+    current_credit_balance: float = df_credit.iloc[-1][col_names[1]]
+    # Calculates the interest amount
+    interest_amount: float = current_credit_balance * (interest / 100 / 12)
+    # Calculates the final payment amount
+    final_payment: float = np.add(current_credit_balance, interest_amount)
+    # Creates a new DataFrame with the new values
+    df_new_values = pd.DataFrame(
+        data=[[
+            df_credit.iloc[-1][col_names[0]] + 1,
+            0,
+            interest_amount,
+            final_payment,
+        ]],
+        columns=col_names,
+    )
+    # Concatenates the new DataFrame with the old one
+    pd.concat([df_credit, df_new_values], ignore_index=True, inplace=True)
+    return df_credit
 
 
 def _calculation_selection(ui_text: dict) -> int:
@@ -117,7 +132,12 @@ def _execute_calculation_downpayment(
             repayment=repayment,
         )
         logger.debug(f"Updated DataFrame:\n{df_credit_monthly.tail()}")
-    
+    df_credit_monthly = _credit_calculation_downpayment_final_payment(
+        df_credit=df_credit_monthly,
+        col_names=col_names,
+        interest=interest,
+    )
+    logger.debug(f"Final DataFrame:\n{df_credit_monthly.tail()}")
 
 
 def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
