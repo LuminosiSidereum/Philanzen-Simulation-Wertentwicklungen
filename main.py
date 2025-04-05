@@ -4,7 +4,7 @@ from simulation import credit_simulation, wealth_projection, utils
 from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 
-
+# MARK: Project Wide Setup Functions
 # Configure root logger
 def configure_logging():
     Path("log").mkdir(parents=True, exist_ok=True)  # Create log directory if it doesn't exist
@@ -28,6 +28,23 @@ def configure_logging():
     for handler in root_logger.handlers[:]:
         root_logger.removeHandler(handler)
     root_logger.addHandler(file_handler)
+
+# Project Structure Setup
+def setup_project_structure(base_path: str = ".") -> None:
+    """Creates the required folder structure for the project."""
+    structure = {
+        "data": ["input", "output"],
+        "log": [],
+        "resources": [],
+        "simulation": []
+    }
+
+    for folder, subfolders in structure.items():
+        (Path(base_path) / folder).mkdir(parents=True, exist_ok=True)
+        for sub in subfolders:
+            (Path(base_path) / folder / sub).mkdir(exist_ok=True)
+    
+    logging.info(f"Project structure created at {Path(base_path).resolve()}")
 
 
 # MARK: Functions
