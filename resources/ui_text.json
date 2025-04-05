@@ -1,16 +1,17 @@
 {
     "de": {
         "homescreen": {
-            "mode_selection_request": "Welche Simulation möchten Sie starten?",
-            "modes": {
-                "mode_0": "0: Vermögensentwicklung",
-                "mode_1": "1: Abzahlungsplan für einen Kredit",
-                "mode_2": "2: Inflationssimulation",
-                "mode_3": "3: Sparplan"
+            "request_action_selection": "Welche Aktion möchten Sie auführen?",
+            "action": {
+                "action_0": "0: Vermögensentwicklung",
+                "action_1": "1: Abzahlungsplan für einen Kredit",
+                "action_2": "2: Inflationssimulation",
+                "action_3": "3: Sparplan",
+                "action_4": "99: Einstellungen ändern",
+                "action_quit": "q: Propgramm beenden"
             },
-            "mode_selection_input": "Bitte Nummer eingeben: ",
-            "invalid_mode_selection": "Ungültige Eingabe. Bitte wählen Sie eine gültige Nummer aus.",
-            "invalid_input": "Ungültige Eingabe. Bitte geben sie eine gültige Zahl ein.",
+            "input_action_selection": "Bitte gültige Actionskennung eingeben: ",
+            "invalid_action_selection": "Ungültige Eingabe. Bitte geben Sie eine gültige Aktionskennung ein.",
             "general_input_information":{
                 "line_1": "Bitte geben Sie alle Zahlen ohne Einheiten und Währungszeichen ein.",
                 "line_2": "Beispiel: 1000 für 1000 Euro",
