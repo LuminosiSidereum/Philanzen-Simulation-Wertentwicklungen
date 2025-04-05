@@ -2,10 +2,13 @@ import logging
 import os
 from simulation import credit_simulation, wealth_projection, utils
 from logging.handlers import TimedRotatingFileHandler
+from pathlib import Path
 
 
 # Configure root logger
 def configure_logging():
+    Path("log").mkdir(parents=True, exist_ok=True)  # Create log directory if it doesn't exist
+    
     # Get the root logger
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.INFO)  # Set base level for all loggers
@@ -17,7 +20,7 @@ def configure_logging():
 
     # File handler with rotation
     file_handler = TimedRotatingFileHandler(
-        "financial_simulations.log", when="midnight", backupCount=7, encoding="utf-8"
+        "log/financial_simulations.log", when="midnight", backupCount=7, encoding="utf-8"
     )
     file_handler.setFormatter(formatter)
 

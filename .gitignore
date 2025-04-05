@@ -3,4 +3,4 @@ __pycache__/
 *.xlsx
 *.xls
 *.csv
-*.log
+*.log*
