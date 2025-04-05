@@ -45,7 +45,7 @@ def _input_downpayment_monthly(
             return repayment
 
 
-def _credit_calculation_downpayment_monthly_values(
+def _calculate_monthly_downpayment(
     df_credit: DataFrame, col_names: list, interest: float, repayment: float
 ) -> DataFrame:
     """
@@ -91,7 +91,7 @@ def _credit_calculation_downpayment_monthly_values(
     return df_credit
 
 
-def _credit_calculation_downpayment_final_payment(
+def _calculate_final_downpayment(
     df_credit: DataFrame, col_names: list, interest: float
 ) -> DataFrame:
     """
@@ -165,7 +165,7 @@ def _calculation_selection(ui_text: dict) -> int:
             print(ui_text["invalid_input"])
 
 
-def _execute_calculation_with_downpayment(
+def calculate_credit_downpayment_plan(
     credit: float, interest: float, repayment: float, currency: str = "EUR"
 ) -> list:
     """
@@ -229,7 +229,7 @@ def _execute_calculation_with_downpayment(
     # The last row of the DataFrame is used to check if the remaining credit balance is greater than the repayment amount
     print("...")
     while df_credit_simulation.iloc[-1][col_names_simulation[1]] > repayment:
-        df_credit_simulation = _credit_calculation_downpayment_monthly_values(
+        df_credit_simulation = _calculate_monthly_downpayment(
             df_credit=df_credit_simulation,
             col_names=col_names_simulation,
             interest=interest,
@@ -237,7 +237,7 @@ def _execute_calculation_with_downpayment(
         )
         logger.debug(f"Updated DataFrame:\n{df_credit_simulation.tail()}")
     # Calculate the final payment
-    df_credit_simulation = _credit_calculation_downpayment_final_payment(
+    df_credit_simulation = _calculate_final_downpayment(
         df_credit=df_credit_simulation,
         col_names=col_names_simulation,
         interest=interest,
@@ -290,19 +290,18 @@ def _execute_calculation_with_downpayment(
 
     return df_credit_summary.iloc[0].values.tolist()
 
+
 def calculate_monthly_payment_from_duration(
-    credit_amount: float, 
-    annual_interest_rate: float, 
-    duration_months: int
+    credit_amount: float, annual_interest_rate: float, duration_months: int
 ) -> float:
     """
     Calculate the fixed monthly payment for a loan using the annuity formula.
-    
+
     Args:
         credit_amount (float): Total loan amount (principal).
         annual_interest_rate (float): Annual interest rate (e.g., 5 for 5%).
         duration_months (int): Loan term in months.
-    
+
     Returns:
         float: Monthly payment amount.
     """
@@ -311,16 +310,42 @@ def calculate_monthly_payment_from_duration(
     if annual_interest_rate < 0:
         raise ValueError("Interest rate cannot be negative.")
 
-    monthly_interest_rate = annual_interest_rate / 100 / 12  # Convert % to decimal and annual to monthly
+    monthly_interest_rate = (
+        annual_interest_rate / 100 / 12
+    )  # Convert % to decimal and annual to monthly
     numerator = monthly_interest_rate * (1 + monthly_interest_rate) ** duration_months
     denominator = (1 + monthly_interest_rate) ** duration_months - 1
     monthly_payment = credit_amount * (numerator / denominator)
-    
+
     return round(monthly_payment, 2)  # Round to 2 decimal places (cents)
-        
+
+
 def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
     """
-    Execute the credit simulation.
+    Execute the credit simulation process.
+    This function handles the credit simulation workflow, including user input,
+    calculation of credit repayment plans, and displaying the results. It supports
+    different languages and currencies.
+    Args:
+        language (str): The language code for the user interface text (default is "de").
+        currency (str): The currency code for displaying monetary values (default is "EUR").
+    Workflow:
+        1. Load user interface text based on the selected language.
+        2. Display welcome messages and currency information.
+        3. Prompt the user to select a calculation method:
+            - Option 0: Calculate based on a fixed monthly downpayment.
+            - Option 1: Calculate based on a fixed credit duration.
+        4. Collect necessary inputs from the user (e.g., credit amount, interest rate).
+        5. Perform the selected calculation and generate a repayment summary.
+        6. Display the summary of the credit details.
+        7. Wait for user input to return to the homescreen.
+    Notes:
+        - The function clears the console screen before displaying the summary.
+        - If no calculation is performed, an error is logged, and the function exits.
+    Raises:
+        ValueError: If invalid inputs are provided during user input prompts.
+    Returns:
+        None
     """
     ui_text: dict = utils.load_text_json(
         language=language, interface="credit_simulation", filename="ui_text"
@@ -337,6 +362,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
         ui_text["credit_interest_rate"], ui_text["invalid_input"]
     )
 
+    summary: list = []
     if calculation_selection == 0:
         downpayment: float = _input_downpayment_monthly(
             credit=credit_amout,
@@ -344,43 +370,37 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
             ui_text=ui_text,
             currency=currency,
         )
-        summary: list = _execute_calculation_with_downpayment(
+        summary = calculate_credit_downpayment_plan(
             credit_amout, interest_rate, downpayment, currency
         )
-        os.system("cls" if os.name == "nt" else "clear")
-        for i, dialog in enumerate(ui_text["credit_summary"].values()):
-            if i == 0:
-                print(dialog)
-                continue
-            if i == 2 or i == 3:
-                print(f"{dialog}{summary[i-1]}")
-                continue
-            print(f"{dialog} | {currency}: {summary[i-1]}")
-
-        input(ui_text["return_to_homescreen"])
-        logging.info("User returned to the homescreen after successfull simulation.")
-        return
     elif calculation_selection == 1:
         duration: int = utils.user_input_int(
-            ui_text["credit_duration"], ui_text["invalid_input"])
+            ui_text["credit_duration"], ui_text["invalid_input"]
+        )
         repayment: float = calculate_monthly_payment_from_duration(
             credit_amount=credit_amout,
             annual_interest_rate=interest_rate,
-            duration_months=duration
+            duration_months=duration,
         )
-        summary : list = _execute_calculation_with_downpayment(
+        summary = calculate_credit_downpayment_plan(
             credit_amout, interest_rate, repayment, currency
         )
-        os.system("cls" if os.name == "nt" else "clear")
-        for i, dialog in enumerate(ui_text["credit_summary"].values()):
-            if i == 0:
-                print(dialog)
-                continue
-            if i == 2 or i == 3:
-                print(f"{dialog}{summary[i-1]}")
-                continue
-            print(f"{dialog} | {currency}: {summary[i-1]}")
 
-        input(ui_text["return_to_homescreen"])
-        logging.info("User returned to the homescreen after successfull simulation.")
+    if not summary:
+        logger.error("Summary is empty. No calculation was performed.")
         return
+
+    # Prints the summary of the credit details before returning to the homescreen
+    os.system("cls" if os.name == "nt" else "clear")
+    for i, dialog in enumerate(ui_text["credit_summary"].values()):
+        if i == 0:
+            print(dialog)
+            continue
+        if i == 2 or i == 3:
+            print(f"{dialog}{summary[i-1]}")
+            continue
+        print(f"{dialog} | {currency}: {summary[i-1]}")
+
+    input(ui_text["return_to_homescreen"])
+    logging.info("User returned to the homescreen after successfull credit simulation.")
+    return
