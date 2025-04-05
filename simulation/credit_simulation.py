@@ -165,7 +165,7 @@ def _calculation_selection(ui_text: dict) -> int:
             print(ui_text["invalid_input"])
 
 
-def _execute_calculation_downpayment(
+def _execute_calculation_with_downpayment(
     credit: float, interest: float, repayment: float, currency: str = "EUR"
 ) -> list:
     """
@@ -290,7 +290,34 @@ def _execute_calculation_downpayment(
 
     return df_credit_summary.iloc[0].values.tolist()
 
+def calculate_monthly_payment_from_duration(
+    credit_amount: float, 
+    annual_interest_rate: float, 
+    duration_months: int
+) -> float:
+    """
+    Calculate the fixed monthly payment for a loan using the annuity formula.
+    
+    Args:
+        credit_amount (float): Total loan amount (principal).
+        annual_interest_rate (float): Annual interest rate (e.g., 5 for 5%).
+        duration_months (int): Loan term in months.
+    
+    Returns:
+        float: Monthly payment amount.
+    """
+    if duration_months <= 0:
+        raise ValueError("Duration must be positive.")
+    if annual_interest_rate < 0:
+        raise ValueError("Interest rate cannot be negative.")
 
+    monthly_interest_rate = annual_interest_rate / 100 / 12  # Convert % to decimal and annual to monthly
+    numerator = monthly_interest_rate * (1 + monthly_interest_rate) ** duration_months
+    denominator = (1 + monthly_interest_rate) ** duration_months - 1
+    monthly_payment = credit_amount * (numerator / denominator)
+    
+    return round(monthly_payment, 2)  # Round to 2 decimal places (cents)
+        
 def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
     """
     Execute the credit simulation.
@@ -317,7 +344,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
             ui_text=ui_text,
             currency=currency,
         )
-        summary: list = _execute_calculation_downpayment(
+        summary: list = _execute_calculation_with_downpayment(
             credit_amout, interest_rate, downpayment, currency
         )
         os.system("cls" if os.name == "nt" else "clear")
@@ -335,8 +362,25 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
         return
     elif calculation_selection == 1:
         duration: int = utils.user_input_int(
-            ui_text["credit_duration"], ui_text["invalid_input"]
+            ui_text["credit_duration"], ui_text["invalid_input"])
+        repayment: float = calculate_monthly_payment_from_duration(
+            credit_amount=credit_amout,
+            annual_interest_rate=interest_rate,
+            duration_months=duration
         )
-        raise NotImplementedError(
-            "The calculation of the monthly downpayment is not implemented yet."
+        summary : list = _execute_calculation_with_downpayment(
+            credit_amout, interest_rate, repayment, currency
         )
+        os.system("cls" if os.name == "nt" else "clear")
+        for i, dialog in enumerate(ui_text["credit_summary"].values()):
+            if i == 0:
+                print(dialog)
+                continue
+            if i == 2 or i == 3:
+                print(f"{dialog}{summary[i-1]}")
+                continue
+            print(f"{dialog} | {currency}: {summary[i-1]}")
+
+        input(ui_text["return_to_homescreen"])
+        logging.info("User returned to the homescreen after successfull simulation.")
+        return
