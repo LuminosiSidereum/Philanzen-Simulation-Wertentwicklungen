@@ -201,6 +201,7 @@ def run_credit_downpayment_plan_calculation(
         - total cost (float)
         - currency (str)
     """
+    logger.info(f"Creating credit down payment plan for ({credit = })")
 
     # Load your text configuration
     output_text: dict = utils.load_text_json(
@@ -223,7 +224,6 @@ def run_credit_downpayment_plan_calculation(
         raise ValueError
 
     # Create DataFrame
-    logger.info(f"Creating calculation_downpayment DataFrame ({credit = })")
     df_credit_simulation = pd.DataFrame(
         data=[[0, credit, 0, 0]], columns=col_names_simulation
     )
@@ -351,6 +351,8 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
     Returns:
         None
     """
+    logger.info("Executing the credit simulation")
+    
     ui_text: dict = utils.load_text_json(
         language=language, interface="credit_simulation", filename="ui_text"
     )

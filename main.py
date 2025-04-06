@@ -199,12 +199,12 @@ def run_simulation_interface():
         - The function clears the console using `os.system` for better user 
           experience.
     """
+    logger.info(f"Run the homescreen interface")
     
     settings: dict = utils.load_settings()  # type: ignore
     ui_text: dict = utils.load_text_json(language=settings["ui"]["language"], interface="homescreen", filename="ui_text")  # type: ignore
     logger.debug(f"Loaded settings and UI text.")
 
-    logger.info("Starting financial simulations.")
     print(ui_text["request_action_selection"])
     for action_name in ui_text["action"].values():
         print(action_name)
@@ -225,6 +225,7 @@ if __name__ == "__main__":
     print("...")
     configure_logging()
     logger = logging.getLogger(__name__)
+    logger.info("Starting the financial simulation program.")
     while True:
         os.system("cls" if os.name == "nt" else "clear")
         run_simulation_interface()

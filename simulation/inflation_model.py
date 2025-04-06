@@ -45,6 +45,8 @@ def run_inflation_calculation(
         simulation_results (dict): The simulation results.
         filename (str): The name of the file to save the results to.
     """
+    logger.info(f"Creating an inflation summary for {capital = }")
+
     capital_inflated = calculate_inflated_capital(
         inflation_rate=inflation_rate, years=inflation_period, capital=capital
     )
@@ -98,9 +100,12 @@ def run_inflation_calculation(
 
 
 def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
+    logger.info("Excecuting the inflation simulation.")
+    # Load the UI text for the inflation simulation
     ui_text: dict = utils.load_text_json(
         language=language, interface="inflation_model", filename="ui_text"
     )
+
     for dialog in ui_text["welcome_text"].values():
         print(dialog)
     print(f"{currency}")
