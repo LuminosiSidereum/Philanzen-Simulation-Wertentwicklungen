@@ -54,6 +54,28 @@
             },
             "return_to_homescreen": "Um zurück zum Hauptmenü zu gelangen, drücken Sie die Eingabetaste."
         },
+        "inflation_model": {
+            "welcome_text": {
+                "line_1": "Bitte halten Sie den Preis für ein Laib Brot sowie den Betrag Ihres Kapitals parat.",
+                "line_2": "Die Währung für ihre Berechnungen ist:"
+            },
+            "inflation_rate": "Inflationsrate p.a. | % : ",
+            "bread_price": "Preis für ein Laib Brot",
+            "capital": "Kapital",
+            "inflation_period": "Inflationszeitraum | Jahre : ",
+            "invalid_input": "Ungültige Eingabe. Bitte geben sie eine gültige Zahl ein.",
+            "summary":{
+                "line_0": "Zusammenfassung der Inflationssimulation",
+                "line_1": "Inflationsperiode | Jahre : ",
+                "line_2": "Inflationsrate p.a. | % : ",
+                "line_3": "Kapital",
+                "line_4": "Kapital inflationsbereinigt",
+                "line_5": "Preis für ein Laib Brot",
+                "line_6": "Aktuell kaufbare Laibe Brot: ",
+                "line_7": "Zukünftig kaufbare Laibe Brot: "
+            },
+            "return_to_homescreen": "Um zurück zum Hauptmenü zu gelangen, drücken Sie die Eingabetaste."
+        },
             "wealth_projection": {}
     }
 }

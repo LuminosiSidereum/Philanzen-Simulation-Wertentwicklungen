@@ -12,7 +12,18 @@
                 "currency": "Währung",
                 "file_name_credit_simulation": "kredit_simulation_monatliche_abzahlung",
                 "file_name_credit_summary": "kredit_simulation_zusammenfassung"
-            }
-        },
-        "wealth_projection": {}
+            },
+        "inflation_model": {
+            "duration": "Laufzeit",
+            "inflation_rate": "Inflationsrate",
+            "capital_amount": "Kapitalbetrag",
+            "capital_inflated": "Kapitalbetrag inflationsbereinigt",
+            "bread_price": "Preis für ein Laib Brot",
+            "bread_current_amount": "Aktuell kaufbare Laibe Brot",
+            "bread_future_amount": "Zukünftig kaufbare Laibe Brot",
+            "currency": "Währung",
+            "file_name_inflation_simulation": "inflationssimulation"
+            },
+            "wealth_projection": {}
+        }
     }
