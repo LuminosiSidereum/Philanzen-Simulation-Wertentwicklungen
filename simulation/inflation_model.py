@@ -112,14 +112,14 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
     # Get the simulation parameters
     inflation_rate = utils.load_settings()["financial"]["yearly_inflation_rate"]
     print(f"{ui_text["inflation_rate"]}{inflation_rate}")
-    bread_price = utils.user_input_float(
-        f"{ui_text["bread_price"]} | {currency}: ", ui_text["invalid_input"]
-    )
     capital = utils.user_input_float(
         f"{ui_text["capital"]} | {currency}: ", ui_text["invalid_input"]
     )
     inflation_period = utils.user_input_float(
         f"{ui_text["inflation_period"]}", ui_text["invalid_input"]
+    )
+    bread_price = utils.user_input_float(
+        f"{ui_text["bread_price"]} | {currency}: ", ui_text["invalid_input"]
     )
     summary: list = run_inflation_calculation(
         capital=capital,

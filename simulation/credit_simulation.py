@@ -361,7 +361,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
     print(f"{currency}")
     calculation_selection: int = _calculation_selection(ui_text)
 
-    credit_amout: float = utils.user_input_float(
+    credit_amount: float = utils.user_input_float(
         ui_text["credit_amount"], ui_text["invalid_input"]
     )
     interest_rate: float = utils.user_input_float(
@@ -373,7 +373,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
 
     if calculation_selection == 0:
         downpayment = _input_downpayment_monthly(
-            credit=credit_amout,
+            credit=credit_amount,
             interest=interest_rate,
             ui_text=ui_text,
             currency=currency,
@@ -383,13 +383,13 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
             ui_text["credit_duration"], ui_text["invalid_input"]
         )
         downpayment = calculate_monthly_payment_from_duration(
-            credit_amount=credit_amout,
+            credit_amount=credit_amount,
             annual_interest_rate=interest_rate,
             duration_months=duration,
         )
     # Execute the credit downpayment plan calculation
     summary = run_credit_downpayment_plan_calculation(
-        credit_amout, interest_rate, downpayment, currency, language
+        credit_amount, interest_rate, downpayment, currency, language
     )
 
     if not summary:

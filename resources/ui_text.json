@@ -10,7 +10,7 @@
                 "action_99": "99: Einstellungen ändern",
                 "action_quit": "q: Propgramm beenden"
             },
-            "input_action_selection": "Bitte gültige Actionskennung eingeben: ",
+            "input_action_selection": "Bitte gültige Aktionskennung eingeben: ",
             "invalid_action_selection": "Ungültige Eingabe. Bitte geben Sie eine gültige Aktionskennung ein.",
             "general_input_information":{
                 "line_0": "Bitte geben Sie alle Zahlen ohne Einheiten und Währungszeichen ein.",
