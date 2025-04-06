@@ -84,15 +84,15 @@ def validate_user_selection(*, ui_text: dict) -> int:
             quit()
 
 
-def execute_selected_simulation(user_choice: int):
+def execute_selected_simulation(user_choice: int, settings: dict) -> None:
     if user_choice == 0:
         raise NotImplementedError(
             f"Simulation is not implemented yet. {user_choice = }"
         )
     elif user_choice == 1:
-        credit_simulation.execute_simulation()  # Language and Currency selection needs to be implemented; currently using standard values
+        credit_simulation.execute_simulation(settings["ui"]["language"], settings["financial"]["currency"])
     elif user_choice == 2:
-        inflation_model.execute_simulation()  # Language and Currency selection needs to be implemented; currently using standard values
+        inflation_model.execute_simulation(settings["ui"]["language"], settings["financial"]["currency"]) 
     elif user_choice == 3:
         raise NotImplementedError(
             f"Simulation is not implemented yet. {user_choice = }"
@@ -124,7 +124,7 @@ def run_simulation_interface():
     input(ui_text["user_confirmation"])
     os.system("cls" if os.name == "nt" else "clear")
     try:
-        execute_selected_simulation(user_choice)
+        execute_selected_simulation(user_choice, settings)
     except NotImplementedError as e:
         logger.error(f"Not implemented: {e}")
 
