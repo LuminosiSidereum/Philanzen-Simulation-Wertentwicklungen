@@ -30,7 +30,7 @@ def calculate_inflated_capital(
     return capital_inflated
 
 
-def _run_inflation_simulation(
+def run_inflation_calculation(
     capital: float,
     bread_price: float,
     inflation_rate: float,
@@ -116,7 +116,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
     inflation_period = utils.user_input_float(
         f"{ui_text["inflation_period"]}", ui_text["invalid_input"]
     )
-    summary: list = _run_inflation_simulation(
+    summary: list = run_inflation_calculation(
         capital=capital,
         bread_price=bread_price,
         inflation_rate=inflation_rate,

@@ -43,7 +43,7 @@
                 "line_2": "Die monatlichen Zinszahlungen übersteigen die Abzahlungsrate.",
                 "line_3": "Bitte passen Sie die monatliche Abzahlungsrate an und versuchen Sie es erneut."
             },
-            "credit_summary":{
+            "summary":{
                 "line_1": "Zusammenfassung der Kreditdetails",
                 "line_2": "Kreditbetrag",
                 "line_3": "Zinssatz | % : ",

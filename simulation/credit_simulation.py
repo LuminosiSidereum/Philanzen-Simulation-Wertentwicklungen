@@ -165,8 +165,12 @@ def _calculation_selection(ui_text: dict) -> int:
             print(ui_text["invalid_input"])
 
 
-def calculate_credit_downpayment_plan(
-    credit: float, interest: float, repayment: float, currency: str = "EUR"
+def run_credit_downpayment_plan_calculation(
+    credit: float,
+    interest: float,
+    downpayment: float,
+    currency: str = "EUR",
+    language: str = "de",
 ) -> list:
     """
     Executes the calculation of a credit downpayment plan and generates a summary.
@@ -177,7 +181,7 @@ def calculate_credit_downpayment_plan(
     Args:
         credit (float): The initial credit amount.
         interest (float): The annual interest rate (in percentage).
-        repayment (float): The fixed monthly repayment amount.
+        downpayment (float): The fixed monthly repayment amount.
         currency (str, optional): The currency of the credit. Defaults to "EUR".
     Raises:
         ValueError: If a required key is missing in the JSON configuration file.
@@ -200,7 +204,7 @@ def calculate_credit_downpayment_plan(
 
     # Load your text configuration
     output_text: dict = utils.load_text_json(
-        language="de", interface="credit_simulation", filename="output_text"
+        language=language, interface="credit_simulation", filename="output_text"
     )
 
     # Validate and extract colum names
@@ -228,12 +232,12 @@ def calculate_credit_downpayment_plan(
     # Calculate the monthly downpayment values until the remaining credit balance is less than the repayment amount
     # The last row of the DataFrame is used to check if the remaining credit balance is greater than the repayment amount
     print("...")
-    while df_credit_simulation.iloc[-1][col_names_simulation[1]] > repayment:
+    while df_credit_simulation.iloc[-1][col_names_simulation[1]] > downpayment:
         df_credit_simulation = _calculate_monthly_downpayment(
             df_credit=df_credit_simulation,
             col_names=col_names_simulation,
             interest=interest,
-            repayment=repayment,
+            repayment=downpayment,
         )
         logger.debug(f"Updated DataFrame:\n{df_credit_simulation.tail()}")
     # Calculate the final payment
@@ -270,7 +274,7 @@ def calculate_credit_downpayment_plan(
                 credit,
                 interest,
                 df_credit_simulation.iloc[-1][col_names_simulation[0]],
-                repayment,
+                downpayment,
                 df_credit_simulation[col_names_simulation[2]].sum().round(2),
                 df_credit_simulation[col_names_simulation[2]].sum().round(2) + credit,
                 currency,
@@ -363,28 +367,28 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
     )
 
     summary: list = []
+    downpayment: float
+
     if calculation_selection == 0:
-        downpayment: float = _input_downpayment_monthly(
+        downpayment = _input_downpayment_monthly(
             credit=credit_amout,
             interest=interest_rate,
             ui_text=ui_text,
             currency=currency,
         )
-        summary = calculate_credit_downpayment_plan(
-            credit_amout, interest_rate, downpayment, currency
-        )
     elif calculation_selection == 1:
         duration: int = utils.user_input_int(
             ui_text["credit_duration"], ui_text["invalid_input"]
         )
-        repayment: float = calculate_monthly_payment_from_duration(
+        downpayment = calculate_monthly_payment_from_duration(
             credit_amount=credit_amout,
             annual_interest_rate=interest_rate,
             duration_months=duration,
         )
-        summary = calculate_credit_downpayment_plan(
-            credit_amout, interest_rate, repayment, currency
-        )
+    # Execute the credit downpayment plan calculation
+    summary = run_credit_downpayment_plan_calculation(
+        credit_amout, interest_rate, downpayment, currency, language
+    )
 
     if not summary:
         logger.error("Summary is empty. No calculation was performed.")
@@ -392,7 +396,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
 
     # Prints the summary of the credit details before returning to the homescreen
     os.system("cls" if os.name == "nt" else "clear")
-    for i, dialog in enumerate(ui_text["credit_summary"].values()):
+    for i, dialog in enumerate(ui_text["summary"].values()):
         if i == 0:
             print(dialog)
             continue
