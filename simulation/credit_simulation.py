@@ -295,33 +295,7 @@ def run_credit_downpayment_plan_calculation(
     return df_credit_summary.iloc[0].values.tolist()
 
 
-def calculate_monthly_payment_from_duration(
-    credit_amount: float, annual_interest_rate: float, duration_months: int
-) -> float:
-    """
-    Calculate the fixed monthly payment for a loan using the annuity formula.
 
-    Args:
-        credit_amount (float): Total loan amount (principal).
-        annual_interest_rate (float): Annual interest rate (e.g., 5 for 5%).
-        duration_months (int): Loan term in months.
-
-    Returns:
-        float: Monthly payment amount.
-    """
-    if duration_months <= 0:
-        raise ValueError("Duration must be positive.")
-    if annual_interest_rate < 0:
-        raise ValueError("Interest rate cannot be negative.")
-
-    monthly_interest_rate = (
-        annual_interest_rate / 100 / 12
-    )  # Convert % to decimal and annual to monthly
-    numerator = monthly_interest_rate * (1 + monthly_interest_rate) ** duration_months
-    denominator = (1 + monthly_interest_rate) ** duration_months - 1
-    monthly_payment = credit_amount * (numerator / denominator)
-
-    return round(monthly_payment, 2)  # Round to 2 decimal places (cents)
 
 
 def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
@@ -382,8 +356,8 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
         duration: int = utils.user_input_int(
             ui_text["credit_duration"], ui_text["invalid_input"]
         )
-        downpayment = calculate_monthly_payment_from_duration(
-            credit_amount=credit_amount,
+        downpayment = utils.calculate_monthly_payment_from_duration(
+            target_amount= credit_amount,
             annual_interest_rate=interest_rate,
             duration_months=duration,
         )
