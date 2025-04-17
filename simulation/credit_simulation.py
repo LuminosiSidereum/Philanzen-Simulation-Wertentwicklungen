@@ -382,5 +382,5 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
         print(f"{dialog} | {currency}: {summary[i-1]}")
 
     input(ui_text["return_to_homescreen"])
-    logging.info("User returned to the homescreen after successfull credit simulation.")
+    logger.info("User returns to the homescreen after successfull execution of the simulation.")
     return
