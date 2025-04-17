@@ -3,6 +3,7 @@ import logging
 import json
 import pandas as pd  # type: ignore
 from pandas import DataFrame
+import time
 
 # Variables
 global_variables: dict = {"root_path": None}
@@ -149,3 +150,28 @@ def calculate_monthly_payment_from_duration(
     monthly_payment = target_amount * (numerator / denominator)
 
     return round(monthly_payment, 2)  # Round to 2 decimal places (cents)
+
+
+def simple_countdown(seconds: int, animation_type: str = "cycle") -> None:
+    
+    dot_patterns = ["...  ", ".... ", "....."]
+    pattern_number : int = 0 
+    
+    for remaining in range(seconds, 0, -1):
+        if animation_type == "cycle":
+            pattern = dot_patterns[pattern_number]
+            pattern_number = (pattern_number + 1)
+        elif animation_type == "blink":
+            pattern = "..." + ("." if remaining % 2 == 0 else " ")
+        else:
+            pattern = "..."
+
+        # Resets the pattern number if it exceeds the length of the list        
+        if pattern_number >= len(dot_patterns):
+            pattern_number = 0
+
+        print(f"{pattern}", end="\r")
+        time.sleep(1)
+        
+    # Clear the line after countdown
+    print(" " * 10, end="\r")
