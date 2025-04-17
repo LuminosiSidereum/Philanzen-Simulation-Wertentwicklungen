@@ -119,6 +119,7 @@ def save_dataframe_to_csv(df: DataFrame, filename: str) -> None:
     except Exception as e:
         logger.error(f"Error saving DataFrame to CSV: {e}")
 
+
 def calculate_monthly_payment_from_duration(
     target_amount: float, annual_interest_rate: float, duration_months: int
 ) -> float:
@@ -133,7 +134,7 @@ def calculate_monthly_payment_from_duration(
 
     Returns:
         float: Monthly payment amount.
-    
+
     Raises:
         ValueError: If duration or rate is invalid.
     """
@@ -153,25 +154,25 @@ def calculate_monthly_payment_from_duration(
 
 
 def simple_countdown(seconds: int, animation_type: str = "cycle") -> None:
-    
+
     dot_patterns = ["...  ", ".... ", "....."]
-    pattern_number : int = 0 
-    
+    pattern_number: int = 0
+
     for remaining in range(seconds, 0, -1):
         if animation_type == "cycle":
             pattern = dot_patterns[pattern_number]
-            pattern_number = (pattern_number + 1)
+            pattern_number = pattern_number + 1
         elif animation_type == "blink":
             pattern = "..." + ("." if remaining % 2 == 0 else " ")
         else:
             pattern = "..."
 
-        # Resets the pattern number if it exceeds the length of the list        
+        # Resets the pattern number if it exceeds the length of the list
         if pattern_number >= len(dot_patterns):
             pattern_number = 0
 
         print(f"{pattern}", end="\r")
         time.sleep(1)
-        
+
     # Clear the line after countdown
     print(" " * 10, end="\r")

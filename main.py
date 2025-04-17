@@ -1,13 +1,19 @@
 import logging
 import os
-from simulation import credit_simulation, wealth_projection, inflation_model, utils, savings_plan_simulation
+from simulation import (
+    credit_simulation,
+    wealth_projection,
+    inflation_model,
+    utils,
+    savings_plan_simulation,
+)
 from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 
-valid_user_inputs: dict[str,list] = {
+valid_user_inputs: dict[str, list] = {
     "modes": [0, 1, 2, 3],
     "settings": [99],
-    "quit": ["quit", "q", "exit", "e", "stop", "close"]
+    "quit": ["quit", "q", "exit", "e", "stop", "close"],
 }
 
 
@@ -35,13 +41,13 @@ def configure_logging() -> Path:
     Returns:
         Path: The path to the log file.
     """
-    
+
     Path("log").mkdir(
         parents=True, exist_ok=True
     )  # Create log directory if it doesn't exist
 
     log_Path = Path("log/financial_simulations.log")
-    
+
     # Get the root logger
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.INFO)  # Set base level for all loggers
@@ -53,7 +59,7 @@ def configure_logging() -> Path:
 
     # File handler with rotation
     file_handler = TimedRotatingFileHandler(
-        filename = log_Path,
+        filename=log_Path,
         when="midnight",
         backupCount=7,
         encoding="utf-8",
@@ -64,7 +70,7 @@ def configure_logging() -> Path:
     for handler in root_logger.handlers[:]:
         root_logger.removeHandler(handler)
     root_logger.addHandler(file_handler)
-    
+
     return log_Path
 
 
@@ -103,7 +109,7 @@ def validate_user_selection(*, ui_text: dict) -> int:
     """
     Validates the user's selection from the input and returns the corresponding integer value.
     This function continuously prompts the user for input until a valid selection is made. It checks
-    if the input is a valid mode, setting, or quit command. If the input is valid, it returns the 
+    if the input is a valid mode, setting, or quit command. If the input is valid, it returns the
     corresponding integer value. If the user requests to quit, the program exits gracefully.
     Args:
         ui_text (dict): A dictionary containing user interface text, including prompts and error messages.
@@ -122,23 +128,26 @@ def validate_user_selection(*, ui_text: dict) -> int:
             - "settings": A list of valid string inputs for settings.
             - "quit": A list of valid string inputs to quit the program.
     """
-    
+
     while True:
         try:
             number_input: int = -1
-            user_input:str = input(ui_text["input_action_selection"])
+            user_input: str = input(ui_text["input_action_selection"])
             user_input = user_input.strip()
 
             if user_input.isdigit():
                 number_input = int(user_input)
-            if number_input in valid_user_inputs["modes"] or user_input in valid_user_inputs["settings"]:
-                return number_input 
-        
-            user_input = user_input.lower()    
+            if (
+                number_input in valid_user_inputs["modes"]
+                or user_input in valid_user_inputs["settings"]
+            ):
+                return number_input
+
+            user_input = user_input.lower()
             if user_input in valid_user_inputs["quit"]:
                 logger.info("User requested to quit the program.")
                 quit()
-            
+
             print(ui_text["invalid_action_selection"])
         except Exception as e:
             logger.error(f"{user_input = } triggered an error: {e}")
@@ -165,20 +174,26 @@ def execute_selected_simulation(user_choice: int, settings: dict) -> None:
     Logs:
         Logs an error message if an invalid user_choice is made.
     """
-    
+
     if user_choice == 0:
         logging.critical(f"{user_choice = } is not implemented yet.")
         raise NotImplementedError
 
     elif user_choice == 1:
-        credit_simulation.execute_simulation(settings["ui"]["language"], settings["financial"]["currency"])
+        credit_simulation.execute_simulation(
+            settings["ui"]["language"], settings["financial"]["currency"]
+        )
     elif user_choice == 2:
-        inflation_model.execute_simulation(settings["ui"]["language"], settings["financial"]["currency"]) 
+        inflation_model.execute_simulation(
+            settings["ui"]["language"], settings["financial"]["currency"]
+        )
     elif user_choice == 3:
-        savings_plan_simulation.execute_simulation(settings["ui"]["language"], settings["financial"]["currency"]) 
+        savings_plan_simulation.execute_simulation(
+            settings["ui"]["language"], settings["financial"]["currency"]
+        )
     elif user_choice == 99:
-            logging.critical(f"{user_choice = } is not implemented yet.")
-            raise NotImplementedError
+        logging.critical(f"{user_choice = } is not implemented yet.")
+        raise NotImplementedError
     else:
         logger.error(
             f"Unhandled and invalid mode selection made by user. {user_choice = }"
@@ -189,9 +204,9 @@ def run_simulation_interface():
     """
     Executes the main interface for running financial simulations.
     This function loads the necessary settings and UI text, displays a menu
-    for the user to select an action, and processes the user's choice. It 
-    clears the console at appropriate points, provides general input 
-    information, and executes the selected simulation. If the selected 
+    for the user to select an action, and processes the user's choice. It
+    clears the console at appropriate points, provides general input
+    information, and executes the selected simulation. If the selected
     simulation is not implemented, an error is logged.
     Steps:
     1. Load settings and UI text.
@@ -202,13 +217,13 @@ def run_simulation_interface():
     Raises:
         NotImplementedError: If the selected simulation is not implemented.
     Note:
-        - The function uses external utility functions `load_settings` and 
+        - The function uses external utility functions `load_settings` and
           `load_text_json` to load configuration and UI text.
-        - The function clears the console using `os.system` for better user 
+        - The function clears the console using `os.system` for better user
           experience.
     """
     logger.info(f"Run the homescreen interface")
-    
+
     settings: dict = utils.load_settings()  # type: ignore
     ui_text: dict = utils.load_text_json(language=settings["ui"]["language"], interface="homescreen", filename="ui_text")  # type: ignore
     logger.debug(f"Loaded settings and UI text.")

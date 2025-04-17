@@ -7,6 +7,7 @@ from simulation import utils
 
 logger = logging.getLogger(__name__)
 
+
 def _calculation_selection(ui_text: dict) -> int:
     """
     Prompts the user to select a calculation option and validates the input.
@@ -33,32 +34,41 @@ def _calculation_selection(ui_text: dict) -> int:
 
 
 def _calculate_monthly_values(
-    df_savings: DataFrame, col_names: list[str], interest_rate: float, monthly_payment: float, savings_amount: float 
+    df_savings: DataFrame,
+    col_names: list[str],
+    interest_rate: float,
+    monthly_payment: float,
+    savings_amount: float,
 ) -> DataFrame:
-    interest_amount: float = df_savings.iloc[-1][col_names[1]] * (interest_rate / 100 / 12)
-    
+    interest_amount: float = df_savings.iloc[-1][col_names[1]] * (
+        interest_rate / 100 / 12
+    )
+
     # Checks if a full monthly payment is needed or if a smaller payment is needed to reach the savings goal
-    if df_savings.iloc[-1][col_names[1]] + interest_amount + monthly_payment >= savings_amount:
-       monthly_payment = savings_amount - df_savings.iloc[-1][col_names[1]] - interest_amount
-    
-    # Create a new DataFrame with the updated values 
+    if (
+        df_savings.iloc[-1][col_names[1]] + interest_amount + monthly_payment
+        >= savings_amount
+    ):
+        monthly_payment = (
+            savings_amount - df_savings.iloc[-1][col_names[1]] - interest_amount
+        )
+
+    # Create a new DataFrame with the updated values
     df_new_values: DataFrame = pd.DataFrame(
         data=[
             [
-
-            df_savings.iloc[-1][col_names[0]] + 1,
-            df_savings.iloc[-1][col_names[1]] + monthly_payment + interest_amount,
-            interest_amount,
-            monthly_payment
-            ]],
-        columns=col_names
+                df_savings.iloc[-1][col_names[0]] + 1,
+                df_savings.iloc[-1][col_names[1]] + monthly_payment + interest_amount,
+                interest_amount,
+                monthly_payment,
+            ]
+        ],
+        columns=col_names,
     )
     # Concatenates the new DataFrame with the old one
     df_savings = pd.concat([df_savings, df_new_values], ignore_index=True)
     return df_savings
-    
-    
-    
+
 
 def run_savings_plan_calculation(
     savings_amount: float,
@@ -105,7 +115,7 @@ def run_savings_plan_calculation(
             col_names=col_names_simulation,
             interest_rate=interest_rate,
             monthly_payment=savings_rate,
-            savings_amount=savings_amount
+            savings_amount=savings_amount,
         )
         logger.debug(f"Updated DataFrame:\n{df_savings_plan.tail()}")
 
@@ -146,7 +156,9 @@ def run_savings_plan_calculation(
     df_savings_summary = df_savings_summary.astype({col_names_summary[2]: int})
 
     # Save the DataFrames to CSV files
-    utils.save_dataframe_to_csv(df=df_savings_plan, filename=output_text["file_name_savings_simulation"])
+    utils.save_dataframe_to_csv(
+        df=df_savings_plan, filename=output_text["file_name_savings_simulation"]
+    )
     utils.save_dataframe_to_csv(
         df=df_savings_summary, filename=output_text["file_name_savings_summary"]
     )
@@ -223,5 +235,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
         print(f"{dialog} | {currency}: {summary[i-1]}")
 
     input(ui_text["return_to_homescreen"])
-    logger.info("User returns to the homescreen after successfull execution of the simulation.")
+    logger.info(
+        "User returns to the homescreen after successfull execution of the simulation."
+    )
     return

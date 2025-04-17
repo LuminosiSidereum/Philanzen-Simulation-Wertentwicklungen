@@ -295,9 +295,6 @@ def run_credit_downpayment_plan_calculation(
     return df_credit_summary.iloc[0].values.tolist()
 
 
-
-
-
 def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
     """
     Execute the credit simulation process.
@@ -326,7 +323,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
         None
     """
     logger.info("Executing the credit simulation")
-    
+
     ui_text: dict = utils.load_text_json(
         language=language, interface="credit_simulation", filename="ui_text"
     )
@@ -357,7 +354,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
             ui_text["credit_duration"], ui_text["invalid_input"]
         )
         downpayment = utils.calculate_monthly_payment_from_duration(
-            target_amount= credit_amount,
+            target_amount=credit_amount,
             annual_interest_rate=interest_rate,
             duration_months=duration,
         )
@@ -382,5 +379,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
         print(f"{dialog} | {currency}: {summary[i-1]}")
 
     input(ui_text["return_to_homescreen"])
-    logger.info("User returns to the homescreen after successfull execution of the simulation.")
+    logger.info(
+        "User returns to the homescreen after successfull execution of the simulation."
+    )
     return

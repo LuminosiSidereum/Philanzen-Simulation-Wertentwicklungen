@@ -1,18 +1,18 @@
 {
     "de": {
         "credit_simulation": {
-                "remaining_credit": "Restschuld",
-                "interest_payment": "Zinszahlung",
-                "interest_rate": "Zinssatz",
-                "credit_amount": "Kreditbetrag",
-                "total_interest": "Gesamtzinsen",
-                "total_cost": "Gesamtkosten",
-                "duration": "Laufzeit",
-                "monthly_downpayment": "Monatliche Abzahlungsrate",
-                "currency": "Währung",
-                "file_name_credit_simulation": "kredit_simulation_monatliche_abzahlung",
-                "file_name_credit_summary": "kredit_simulation_zusammenfassung"
-            },
+            "remaining_credit": "Restschuld",
+            "interest_payment": "Zinszahlung",
+            "interest_rate": "Zinssatz",
+            "credit_amount": "Kreditbetrag",
+            "total_interest": "Gesamtzinsen",
+            "total_cost": "Gesamtkosten",
+            "duration": "Laufzeit",
+            "monthly_downpayment": "Monatliche Abzahlungsrate",
+            "currency": "Währung",
+            "file_name_credit_simulation": "kredit_simulation_monatliche_abzahlung",
+            "file_name_credit_summary": "kredit_simulation_zusammenfassung"
+        },
         "inflation_model": {
             "duration": "Laufzeit",
             "inflation_rate": "Inflationsrate",
@@ -23,20 +23,20 @@
             "bread_future_amount": "Zukünftig kaufbare Laibe Brot",
             "currency": "Währung",
             "file_name_inflation_simulation": "inflationssimulation"
-            },
-            "wealth_projection": {},
-            "savings_plan": {
-                "savings_amount": "Sparbetrag",
-                "savings_balance": "Sparguthaben",
-                "duration": "Laufzeit",
-                "interest_rate": "Zinssatz",
-                "interest_amount": "Zinsen",
-                "monthly_payment": "Monatliche Einzahlung",
-                "total_interest": "Zinsbeitrag",
-                "total_saved": "Eigenbeitrag",
-                "currency": "Währung",
-                "file_name_savings_simulation": "sparplan_simulation",
-                "file_name_savings_summary": "sparplan_zusammenfassung"
-            }
+        },
+        "wealth_projection": {},
+        "savings_plan": {
+            "savings_amount": "Sparbetrag",
+            "savings_balance": "Sparguthaben",
+            "duration": "Laufzeit",
+            "interest_rate": "Zinssatz",
+            "interest_amount": "Zinsen",
+            "monthly_payment": "Monatliche Einzahlung",
+            "total_interest": "Zinsbeitrag",
+            "total_saved": "Eigenbeitrag",
+            "currency": "Währung",
+            "file_name_savings_simulation": "sparplan_simulation",
+            "file_name_savings_summary": "sparplan_zusammenfassung"
         }
     }
+}

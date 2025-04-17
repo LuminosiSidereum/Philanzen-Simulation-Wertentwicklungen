@@ -12,7 +12,7 @@
             },
             "input_action_selection": "Bitte gültige Aktionskennung eingeben: ",
             "invalid_action_selection": "Ungültige Eingabe. Bitte geben Sie eine gültige Aktionskennung ein.",
-            "general_input_information":{
+            "general_input_information": {
                 "line_0": "Bitte geben Sie alle Zahlen ohne Einheiten und Währungszeichen ein.",
                 "line_1": "Beispiel: 1000 für 1000 Euro",
                 "line_2": "Beispiel: 1.5 für 1,5 %",
@@ -21,8 +21,8 @@
                 "line_5": "Als Tausenddelimiter verwenden Sie bitte den Unterstich (_).",
                 "line_6": "Beispiel: 1_000 für 1000"
             },
-            "user_confirmation":"Zum Fortfahren drücken Sie die Eingabetaste.",
-            "error":{
+            "user_confirmation": "Zum Fortfahren drücken Sie die Eingabetaste.",
+            "error": {
                 "NotImplemented": "Diese Funktion ist noch nicht implementiert.",
                 "UnhandledException": {
                     "line_0": "Sie werden gleich zum Hauptmenü zurückgeleitet.",
@@ -53,7 +53,7 @@
                 "line_1": "Die monatlichen Zinszahlungen übersteigen die Abzahlungsrate.",
                 "line_2": "Bitte passen Sie die monatliche Abzahlungsrate an und versuchen Sie es erneut."
             },
-            "summary":{
+            "summary": {
                 "line_0": "Zusammenfassung der Kreditdetails",
                 "line_1": "Kreditbetrag",
                 "line_2": "Zinssatz | % : ",
@@ -74,7 +74,7 @@
             "capital": "Kapital",
             "inflation_period": "Inflationszeitraum | Jahre : ",
             "invalid_input": "Ungültige Eingabe. Bitte geben sie eine gültige Zahl ein.",
-            "summary":{
+            "summary": {
                 "line_0": "Zusammenfassung der Inflationssimulation",
                 "line_1": "Inflationsperiode | Jahre : ",
                 "line_2": "Inflationsrate p.a. | % : ",
@@ -101,7 +101,7 @@
             "savings_period": "Sparzeitraum | Monaten : ",
             "interest_rate": "Zinssatz p.a. | % : ",
             "invalid_input": "Ungültige Eingabe. Bitte geben sie eine gültige Zahl ein.",
-            "summary":{
+            "summary": {
                 "line_0": "Zusammenfassung des Sparplans",
                 "line_1": "Sparziel",
                 "line_2": "Zinssatz p.a. | % : ",
@@ -112,7 +112,6 @@
             },
             "return_to_homescreen": "Um zurück zum Hauptmenü zu gelangen, drücken Sie die Eingabetaste."
         },
-
-            "wealth_projection": {}
+        "wealth_projection": {}
     }
 }
