@@ -154,6 +154,20 @@ def calculate_monthly_payment_from_duration(
 
 
 def simple_countdown(seconds: int, animation_type: str = "cycle") -> None:
+    """
+    Displays a simple countdown timer with an optional animation effect.
+
+    Args:
+        seconds (int): The number of seconds for the countdown.
+        animation_type (str, optional): The type of animation to display during the countdown.
+            Options are:
+            - "cycle": Cycles through a predefined list of dot patterns.
+            - "blink": Displays a blinking dot pattern.
+            - Any other value defaults to a static "..." pattern.
+
+    Returns:
+        None
+    """
 
     dot_patterns = ["...  ", ".... ", "....."]
     pattern_number: int = 0

@@ -40,6 +40,24 @@ def _calculate_monthly_values(
     monthly_payment: float,
     savings_amount: float,
 ) -> DataFrame:
+    """
+    Calculates the next month's values for a savings plan and appends them to the DataFrame.
+
+    This function computes monthly interest, adjusts the monthly payment if necessary to avoid
+    exceeding the target savings amount, and creates a new row in the savings DataFrame
+    representing the next month's state.
+
+    Args:
+        df_savings (DataFrame): The DataFrame containing the current savings plan data.
+        col_names (list[str]): List of column names for the DataFrame in order:
+                              [duration, savings_amount, interest_amount, monthly_payment].
+        interest_rate (float): The annual interest rate as a percentage.
+        monthly_payment (float): The amount of money saved each month.
+        savings_amount (float): The target savings amount.
+
+    Returns:
+        DataFrame: The updated DataFrame with the new monthly values appended.
+    """
     interest_amount: float = df_savings.iloc[-1][col_names[1]] * (
         interest_rate / 100 / 12
     )
@@ -77,6 +95,32 @@ def run_savings_plan_calculation(
     currency: str,
     language: str,
 ) -> list:
+    """
+    Calculate a savings plan based on the provided parameters and return a summary of the results.
+    Args:
+        savings_amount (float): The target savings amount to be reached.
+        interest_rate (float): The annual interest rate applied to the savings.
+        savings_rate (float): The monthly savings contribution.
+        currency (str): The currency in which the savings are calculated.
+        language (str): The language code for loading localized text configurations.
+    Returns:
+        list: A summary of the savings plan containing the following details:
+            - Target savings amount (float)
+            - Annual interest rate (float)
+            - Duration in months (int)
+            - Monthly savings contribution (float)
+            - Total interest earned (float)
+            - Total amount saved (float)
+            - Currency (str)
+    Raises:
+        ValueError: If a required key is missing in the localized text configuration JSON.
+    Notes:
+        - The function generates two CSV files:
+            1. A detailed savings plan simulation.
+            2. A summary of the savings plan.
+        - The column names for the DataFrames are dynamically loaded from a localized text configuration file.
+        - The savings plan is calculated iteratively until the target savings amount is reached.
+    """
 
     logger.info(f"Creating savings plan for ({savings_amount = })")
 
@@ -167,15 +211,32 @@ def run_savings_plan_calculation(
 
 
 def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
-    """Execute the savings plan simulation.
-
+    """
+    Executes the savings plan simulation.
+    This function performs a simulation for a savings plan based on user inputs such as
+    savings amount, interest rate, and either a savings rate or a savings period. It
+    calculates the savings plan details and displays a summary of the results.
     Args:
-        language (str, optional): Language for the simulation. Defaults to "de".
-        currency (str, optional): Currency for the simulation. Defaults to "EUR".
-
+        language (str): The language code for the user interface text. Defaults to "de".
+        currency (str): The currency code for the simulation. Defaults to "EUR".
     Returns:
         None
+    Raises:
+        ValueError: If invalid inputs are provided by the user during the simulation.
+    Workflow:
+        1. Loads the user interface text based on the selected language.
+        2. Displays a welcome message and prompts the user for input.
+        3. Allows the user to select a calculation method:
+            - Option 0: User provides a savings rate.
+            - Option 1: User provides a savings period, and the savings rate is calculated.
+        4. Executes the savings plan calculation using the provided inputs.
+        5. Displays a summary of the calculated savings plan details.
+        6. Returns the user to the homescreen after the simulation is completed.
+    Notes:
+        - The function clears the terminal screen before displaying the summary.
+        - Logs important events such as the start and end of the simulation, as well as errors.
     """
+
     logger.info("Exectuting the savings plan simulation")
 
     ui_text: dict = utils.load_text_json(

@@ -39,12 +39,39 @@ def run_inflation_calculation(
     language: str,
 ) -> list:
     """
-    Save the simulation results to a CSV file.
+    Simulates the effects of inflation on a given capital over a specified period
+    and generates a summary of the results.
 
-    Parameters:
-        simulation_results (dict): The simulation results.
-        filename (str): The name of the file to save the results to.
+    Args:
+        capital (float): The initial amount of capital.
+        bread_price (float): The current price of a single unit of bread.
+        inflation_rate (float): The annual inflation rate (as a percentage).
+        inflation_period (float): The duration of the inflation period in years.
+        currency (str): The currency in which the capital is denominated.
+        language (str): The language code for localization of output text.
+
+    Returns:
+        list: A list containing the simulation results, including:
+            - duration (float): The inflation period in years.
+            - inflation_rate (float): The annual inflation rate.
+            - capital_amount (float): The initial capital amount.
+            - capital_inflated (float): The capital amount after inflation.
+            - bread_price (float): The price of bread.
+            - bread_current_amount (float): The number of bread units that can be
+              purchased with the initial capital.
+            - bread_future_amount (float): The number of bread units that can be
+              purchased with the inflated capital.
+            - currency (str): The currency used in the simulation.
+
+    Raises:
+        ValueError: If a required key is missing in the localized output text JSON.
+
+    Notes:
+        - The function logs the process of creating the inflation summary.
+        - The results are saved to a CSV file using a filename specified in the
+          localized output text JSON.
     """
+
     logger.info(f"Creating an inflation summary for {capital = }")
 
     capital_inflated = calculate_inflated_capital(
@@ -100,6 +127,36 @@ def run_inflation_calculation(
 
 
 def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
+    """
+    Executes the inflation simulation by loading user interface text, gathering user inputs,
+    performing calculations, and displaying the results.
+    Args:
+        language (str): The language code for the user interface text. Defaults to "de".
+        currency (str): The currency code for the simulation. Defaults to "EUR".
+    Returns:
+        None
+    Raises:
+        KeyError: If required keys are missing in the loaded UI text or settings.
+        ValueError: If user inputs are invalid or cannot be converted to float.
+    Workflow:
+        1. Loads the user interface text for the inflation simulation based on the specified language.
+        2. Displays a welcome message and prompts the user for simulation parameters:
+           - Initial capital
+           - Inflation period
+           - Bread price
+        3. Retrieves the yearly inflation rate from the settings.
+        4. Performs the inflation calculation using the provided inputs.
+        5. Displays a summary of the simulation results, including:
+           - Adjusted capital
+           - Adjusted bread price
+           - Other relevant metrics
+        6. Clears the screen and waits for user input to return to the homescreen.
+    Notes:
+        - Logs the execution process and errors using the logger.
+        - Ensures the summary is not empty before displaying results.
+        - Handles platform-specific screen clearing (Windows or Unix-based systems).
+    """
+
     logger.info("Excecuting the inflation simulation.")
     # Load the UI text for the inflation simulation
     ui_text: dict = utils.load_text_json(

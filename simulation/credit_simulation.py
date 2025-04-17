@@ -183,6 +183,7 @@ def run_credit_downpayment_plan_calculation(
         interest (float): The annual interest rate (in percentage).
         downpayment (float): The fixed monthly repayment amount.
         currency (str, optional): The currency of the credit. Defaults to "EUR".
+        language (str, optional): The language for text labels. Defaults to "de".
     Raises:
         ValueError: If a required key is missing in the JSON configuration file.
     Notes:
