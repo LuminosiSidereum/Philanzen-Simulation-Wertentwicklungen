@@ -74,6 +74,7 @@ def setup_project_structure(base_path: str = ".") -> None:
     """
     structure = {
         "data": ["input", "output"],
+        "docs": [],
         "log": [],
         "resources": [],
         "simulation": [],
@@ -84,7 +85,7 @@ def setup_project_structure(base_path: str = ".") -> None:
         for sub in subfolders:
             (Path(base_path) / folder / sub).mkdir(exist_ok=True)
 
-    logging.info(f"Project structure created at {Path(base_path).resolve()}")
+    logger.debug(f"Project structure created at {Path(base_path).resolve()}")
 
 
 # MARK: Functions
@@ -224,6 +225,7 @@ if __name__ == "__main__":
     configure_logging()
     logger = logging.getLogger(__name__)
     logger.info("Starting the financial simulation program.")
+    setup_project_structure()
     while True:
         os.system("cls" if os.name == "nt" else "clear")
         run_simulation_interface()
