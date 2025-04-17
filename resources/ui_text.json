@@ -95,9 +95,10 @@
                 "line_0": "Zusammenfassung des Sparplans",
                 "line_1": "Sparziel",
                 "line_2": "Zinssatz p.a. | % : ",
-                "line_3": "monatliche Sparrate",
-                "line_4": "Sparzeitraum | Monaten : ",
-                "line_5": "Gesamtzins"
+                "line_3": "Sparzeitraum | Monaten : ",
+                "line_4": "monatliche Sparrate",
+                "line_5": "Zinsbeitrag",
+                "line_6": "Eigenbeitrag"
             },
             "return_to_homescreen": "Um zurück zum Hauptmenü zu gelangen, drücken Sie die Eingabetaste."
         },
