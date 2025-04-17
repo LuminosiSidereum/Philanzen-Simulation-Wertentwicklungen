@@ -13,27 +13,35 @@ valid_user_inputs: dict[str,list] = {
 
 # MARK: Project Wide Setup Functions
 # Configure root logger
-def configure_logging():
+def configure_logging() -> Path:
     """
     Configures the logging system for the application.
     This function sets up a logging system that writes log messages to a file
     with daily rotation and retains logs for up to 7 days. It ensures that the
     log directory exists, removes any existing handlers from the root logger
     to prevent duplicates, and applies a consistent log message format.
+
     Log Details:
-    - Log file: "log/financial_simulations.log"
+    - Log directory: "log/"
+    - Log file: "financial_simulations.log"
     - Rotation: Daily at midnight
     - Backup count: 7 days
     - Encoding: UTF-8
     - Format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
     Raises:
         OSError: If the log directory cannot be created.
+
+    Returns:
+        Path: The path to the log file.
     """
     
     Path("log").mkdir(
         parents=True, exist_ok=True
     )  # Create log directory if it doesn't exist
 
+    log_Path = Path("log/financial_simulations.log")
+    
     # Get the root logger
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.INFO)  # Set base level for all loggers
@@ -45,7 +53,7 @@ def configure_logging():
 
     # File handler with rotation
     file_handler = TimedRotatingFileHandler(
-        "log/financial_simulations.log",
+        filename = log_Path,
         when="midnight",
         backupCount=7,
         encoding="utf-8",
@@ -56,6 +64,8 @@ def configure_logging():
     for handler in root_logger.handlers[:]:
         root_logger.removeHandler(handler)
     root_logger.addHandler(file_handler)
+    
+    return log_Path
 
 
 # Project Structure Setup
@@ -157,9 +167,9 @@ def execute_selected_simulation(user_choice: int, settings: dict) -> None:
     """
     
     if user_choice == 0:
-        raise NotImplementedError(
-            f"Simulation is not implemented yet. {user_choice = }"
-        )
+        logging.critical(f"{user_choice = } is not implemented yet.")
+        raise NotImplementedError
+
     elif user_choice == 1:
         credit_simulation.execute_simulation(settings["ui"]["language"], settings["financial"]["currency"])
     elif user_choice == 2:
@@ -167,9 +177,8 @@ def execute_selected_simulation(user_choice: int, settings: dict) -> None:
     elif user_choice == 3:
         savings_plan_simulation.execute_simulation(settings["ui"]["language"], settings["financial"]["currency"]) 
     elif user_choice == 99:
-        raise NotImplementedError(
-            f"Change the Settings is not implemented yet. {user_choice = }"
-        )
+            logging.critical(f"{user_choice = } is not implemented yet.")
+            raise NotImplementedError
     else:
         logger.error(
             f"Unhandled and invalid mode selection made by user. {user_choice = }"
@@ -216,13 +225,19 @@ def run_simulation_interface():
     os.system("cls" if os.name == "nt" else "clear")
     try:
         execute_selected_simulation(user_choice, settings)
-    except NotImplementedError as e:
-        logger.error(f"Not implemented: {e}")
+    except NotImplementedError:
+        print(ui_text["error"]["NotImplemented"])
+    except Exception as e:
+        logger.critical(f"An unexpected error occurred: {e}")
+        for dialogue in ui_text["error"]["UnhandledException"].values():
+            print(dialogue)
+        print(f"{log_Path}")
+        utils.simple_countdown(6)
 
 
 if __name__ == "__main__":
     print("...")
-    configure_logging()
+    log_Path = configure_logging()
     logger = logging.getLogger(__name__)
     logger.info("Starting the financial simulation program.")
     setup_project_structure()

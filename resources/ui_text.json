@@ -21,7 +21,17 @@
                 "line_5": "Als Tausenddelimiter verwenden Sie bitte den Unterstich (_).",
                 "line_6": "Beispiel: 1_000 für 1000"
             },
-            "user_confirmation":"Zum Fortfahren drücken Sie die Eingabetaste."
+            "user_confirmation":"Zum Fortfahren drücken Sie die Eingabetaste.",
+            "error":{
+                "NotImplemented": "Diese Funktion ist noch nicht implementiert.",
+                "UnhandledException": {
+                    "line_0": "Sie werden gleich zum Hauptmenü zurückgeleitet.",
+                    "line_1": "Ein unerwarteter Fehler ist aufgetreten und wurde protokolliert.",
+                    "line_2": "Bitte überprüfen Sie die Eingaben und versuchen Sie es erneut.",
+                    "line_3": "Wenn der Fehler weiterhin besteht, schicken Sie die Log-File an den Support. Vielen Dank!",
+                    "line_4": "Pfad zur Log-File:"
+                }
+            }
         },
         "credit_simulation": {
             "welcome_text": {
