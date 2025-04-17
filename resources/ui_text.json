@@ -76,6 +76,32 @@
             },
             "return_to_homescreen": "Um zurück zum Hauptmenü zu gelangen, drücken Sie die Eingabetaste."
         },
+        "savings_plan": {
+            "welcome_text": {
+                "line_0": "HINWEIS: Diese Sumlation dient zur Generierung eines Sparplans für kleine Beträge.",
+                "line_1": "Wenn größere und langfristigere Vermögensentwicklungen gewünscht sind, verwenden Sie bitte die Vermögensentwicklung!",
+                "line_2": "",
+                "line_3": "Bitte halten Sie den Zeilsparbetrag sowie den Zinssatz p.a. für ihr Sparkonto parat.",
+                "line_4": "Die Währung für ihre Berechnungen ist:"
+            },
+            "user_input_calculation_selection": "Vor der Berechnung müssen Sie auswählen, ob Sie die monatliche Sparrate (0) oder die Laufzeit in Monaten (1) bei der Berechnung verwenden möchten: (0/1) ",
+            "user_input_credit_details": "Bitte geben Sie nun die Kreditdetails als Zahl ein.",
+            "savings_amount": "Sparziel",
+            "savings_rate": "monatliche Sparrate",
+            "savings_period": "Sparzeitraum | Monaten : ",
+            "interest_rate": "Zinssatz p.a. | % : ",
+            "invalid_input": "Ungültige Eingabe. Bitte geben sie eine gültige Zahl ein.",
+            "summary":{
+                "line_0": "Zusammenfassung des Sparplans",
+                "line_1": "Sparziel",
+                "line_2": "Zinssatz p.a. | % : ",
+                "line_3": "monatliche Sparrate",
+                "line_4": "Sparzeitraum | Monaten : ",
+                "line_5": "Gesamtzins"
+            },
+            "return_to_homescreen": "Um zurück zum Hauptmenü zu gelangen, drücken Sie die Eingabetaste."
+        },
+
             "wealth_projection": {}
     }
 }

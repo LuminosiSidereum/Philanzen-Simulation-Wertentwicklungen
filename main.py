@@ -1,6 +1,6 @@
 import logging
 import os
-from simulation import credit_simulation, wealth_projection, inflation_model, utils
+from simulation import credit_simulation, wealth_projection, inflation_model, utils, savings_plan_simulation
 from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 
@@ -164,9 +164,7 @@ def execute_selected_simulation(user_choice: int, settings: dict) -> None:
     elif user_choice == 2:
         inflation_model.execute_simulation(settings["ui"]["language"], settings["financial"]["currency"]) 
     elif user_choice == 3:
-        raise NotImplementedError(
-            f"Simulation is not implemented yet. {user_choice = }"
-        )
+        savings_plan_simulation.execute_simulation(settings["ui"]["language"], settings["financial"]["currency"]) 
     elif user_choice == 99:
         raise NotImplementedError(
             f"Change the Settings is not implemented yet. {user_choice = }"
