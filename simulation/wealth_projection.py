@@ -9,6 +9,23 @@ logger = logging.getLogger(__name__)
 
 
 def _selection_automatic_adjustement(ui_text: dict) -> int:
+    """
+    Handles user input for selecting automatic adjustment options.
+
+    This function prompts the user to input a selection for automatic adjustment
+    based on the provided `ui_text` dictionary. It ensures that the input is either
+    0 or 1, and will repeatedly prompt the user until a valid input is provided.
+
+    Args:
+        ui_text (dict): A dictionary containing text prompts and error messages.
+            Expected keys:
+                - "user_input_selection_automatic_adjustement": Prompt message for user input.
+                - "invalid_input": Message displayed when the input is invalid.
+
+    Returns:
+        int: The user's selection, either 0 or 1.
+    """
+
     while True:
         try:
             user_input = int(
@@ -25,11 +42,23 @@ def _selection_automatic_adjustement(ui_text: dict) -> int:
 def _calculate_monthly_values(
     df_wealth: DataFrame, col_names: list, interest_rate: float, monthly_savings: float
 ) -> DataFrame:
+    """
+    Calculates the monthly financial values and appends them to the given DataFrame.
+    Args:
+        df_wealth (DataFrame): A DataFrame containing the current wealth data.
+            The last row is used as the starting point for calculations.
+        col_names (list): A list of column names for the DataFrame.
+            Expected order: [index_column, balance_column, interest_column, savings_column].
+        interest_rate (float): The annual interest rate (in percentage) to calculate the interest amount.
+        monthly_savings (float): The amount of money saved monthly.
+    Returns:
+        DataFrame: A new DataFrame with the updated monthly values appended.
+    """
+
     current_balance: float = df_wealth.iloc[-1][col_names[1]]
-    # Calculates the interest amount
+    # Calculates the interest amount for this month
     interest_amount: float = current_balance * (interest_rate / 100 / 12)
-    # Calculates the remaining credit balance
-    # The remaining credit balance is the current credit balance plus the interest amount minus the repayment amount
+    # Calculates the new balance for this month
     new_balance: float = current_balance + interest_amount + monthly_savings
     # Creates a new DataFrame with the new values
     df_new_values = pd.DataFrame(
@@ -57,6 +86,43 @@ def run_wealth_projection_calculation(
     currency: str,
     language: str,
 ) -> list:
+    """
+    Perform a wealth projection calculation over a specified period of time.
+    This function calculates the projected wealth growth based on an initial balance,
+    monthly savings, interest rate, and optional automatic savings adjustments. It
+    generates a detailed projection DataFrame and a summary DataFrame, which are saved
+    to CSV files.
+    Args:
+        inital_balance (float): The starting balance for the wealth projection.
+        interest_rate (float): The annual interest rate (as a decimal, e.g., 0.05 for 5%).
+        savings_rate (float): The monthly savings amount.
+        period_years (int): The number of years for the projection.
+        automatic_adjustement (int): Flag to enable automatic savings adjustment every 3 years
+                                     (1 to enable, 0 to disable).
+        currency (str): The currency symbol or code (e.g., "USD", "EUR").
+        language (str): The language code for loading localized text (e.g., "en", "de").
+    Returns:
+        list: A list containing the summary of the wealth projection, including:
+            - Final balance
+            - Inflation-adjusted final balance
+            - Duration (in years)
+            - Interest rate
+            - Inflation rate
+            - Final monthly savings rate
+            - Automatic adjustment flag
+            - Total interest earned
+            - Total savings
+            - Currency
+    Raises:
+        ValueError: If expected keys are missing in the JSON configuration file.
+    Notes:
+        - The function uses a JSON configuration file to load localized text for column names
+          and file names.
+        - Automatic savings adjustment increases the savings rate by 5% every 3 years if enabled.
+        - The inflation rate is loaded from a settings file and used to calculate the
+          inflation-adjusted final balance.
+        - The resulting DataFrames are saved as CSV files using utility functions.
+    """
 
     logger.info(
         "Starting the wealth projection calculation with the following parameters: "
@@ -65,12 +131,12 @@ def run_wealth_projection_calculation(
         f"Automatic adjustment: {automatic_adjustement}"
     )
 
-    # Load your text configuration
+    # Load the collum names for the dataframes from the JSON file
     output_text: dict = utils.load_text_json(
         language=language, interface="wealth_projection", filename="output_text"
     )
 
-    # Validate and extract colum names
+    # Validate and extract colum names from output_text
     plan_keys: list = [
         "duration",  # 0 (float)
         "balance",  # 1 (float)
@@ -85,7 +151,7 @@ def run_wealth_projection_calculation(
         logger.error(msg)
         raise ValueError
 
-    # Create DataFrame
+    # Create DataFrame with the initial values
     df_wealth_projection = pd.DataFrame(
         data=[[0, inital_balance + savings_rate, 0, savings_rate]],
         columns=col_names_simulation,
@@ -104,7 +170,7 @@ def run_wealth_projection_calculation(
             savings_rate,
         )
     # Summary of the wealth plan
-    # Validate and extract colum names for the summary
+    # Validate and extract colum names for the summary from output_text
     plan_keys = [
         "balance",  # 0 (float)
         "inflated_balance",  # 1 (float)
@@ -125,6 +191,8 @@ def run_wealth_projection_calculation(
         logger.error(msg)
         raise ValueError
 
+    # Calculate the final balance and inflation-adjusted final balance for the summary
+    # The final balance is the last value in the balance column
     final_balance: float = df_wealth_projection.iloc[-1][col_names_simulation[1]].round(
         2
     )
@@ -152,8 +220,6 @@ def run_wealth_projection_calculation(
         columns=col_names_summary,
     )
 
-    # df_wealth_projection_summary = df_wealth_projection_summary.astype({col_names_summary[2]: int})
-
     # Save the DataFrames to a CSV file
     utils.save_dataframe_to_csv(
         df_wealth_projection, output_text["file_name_wealth_projection"]
@@ -166,6 +232,25 @@ def run_wealth_projection_calculation(
 
 
 def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
+    """
+    Executes the wealth projection simulation.
+    This function performs a simulation to project wealth growth based on user inputs
+    such as initial balance, interest rate, savings rate, and savings period. It also
+    handles user interaction, displays results, and logs the process.
+    Args:
+        language (str, optional): The language for the user interface text. Defaults to "de".
+        currency (str, optional): The currency symbol for monetary values. Defaults to "EUR".
+    Returns:
+        None: This function does not return any value. It interacts with the user via the console.
+    Raises:
+        ValueError: If invalid inputs are provided by the user during the simulation.
+    Notes:
+        - The function uses utility functions to load UI text, handle user input, and perform calculations.
+        - The summary of the simulation is displayed to the user at the end.
+        - The screen is cleared before displaying the summary for better readability.
+        - Logs are generated to track the execution process and any errors encountered.
+    """
+
     logger.info("Exectuting the wealth projection simulation")
 
     ui_text: dict = utils.load_text_json(
@@ -175,6 +260,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
         print(dialog)
     print(f"{currency}")
 
+    # The user inserts the calculation parameters
     inital_balance: float = utils.user_input_float(
         ui_text_input_request=f"{ui_text["inital_balance"]} | {currency}: ",
         ui_text_invalid_input=ui_text["invalid_input"],
@@ -216,7 +302,6 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
     # Prints the summary of the credit details before returning to the homescreen
     os.system("cls" if os.name == "nt" else "clear")
 
-    # TODO: Adjust the dialog texts to the new summary
     for i, dialog in enumerate(ui_text["summary"].values()):
         if i == 0:
             print(dialog)
