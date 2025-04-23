@@ -8,7 +8,7 @@ import time
 # Variables
 global_variables: dict = {"root_path": None}
 
-# Initalize base logic for the libary
+# Initialize base logic for the library
 logger = logging.getLogger(__name__)
 global_variables["root_path"] = Path(__file__).parent.parent
 logger.debug(
