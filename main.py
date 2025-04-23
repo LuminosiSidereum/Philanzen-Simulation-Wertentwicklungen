@@ -176,8 +176,9 @@ def execute_selected_simulation(user_choice: int, settings: dict) -> None:
     """
 
     if user_choice == 0:
-        logging.critical(f"{user_choice = } is not implemented yet.")
-        raise NotImplementedError
+        wealth_projection.execute_simulation(
+            settings["ui"]["language"], settings["financial"]["currency"]
+        )
 
     elif user_choice == 1:
         credit_simulation.execute_simulation(
