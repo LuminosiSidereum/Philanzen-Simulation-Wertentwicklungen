@@ -1,0 +1,24 @@
+[project]
+name = "philanzen-financial-simulation"
+version = "0.1.0"
+description = "The user can run different financial simulations. The results are saved as a csv in data/output."
+authors = [
+    {name = "Phillipp Schultheiss",email = "phillipp-schultheiss@web.de"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pandas (>=2.2.3,<3.0.0)"
+]
+
+[tool.poetry]
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+mypy = "^1.15.0"
+pre-commit = "^4.2.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
