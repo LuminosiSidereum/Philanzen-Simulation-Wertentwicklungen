@@ -24,7 +24,21 @@
             "currency": "Währung",
             "file_name_inflation_simulation": "inflationssimulation"
         },
-        "wealth_projection": {},
+        "wealth_projection": {
+            "balance": "Vermögen", 
+            "inflated_balance": "Vermögen inflationsbereinigt",  
+            "duration": "Laufzeit",  
+            "interest_amount": "Zinsen",
+            "interest_rate": "geo. Rendite",  
+            "inflation_rate": "Inflationsrate",  
+            "automatic_adjustement": "Dynamisierung",
+            "monthly_savings": "Monatliche Einzahlung", 
+            "total_interest": "Zinsbeitrag", 
+            "total_saved": "Eigenbeitrag", 
+            "currency": "Währung",
+            "file_name_wealth_projection": "vermoegensentwicklung",
+            "file_name_wealth_projection_summary": "vermoegensentwicklung_zusammenfassung"  
+        },
         "savings_plan": {
             "savings_amount": "Sparbetrag",
             "savings_balance": "Sparguthaben",

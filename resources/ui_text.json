@@ -112,6 +112,32 @@
             },
             "return_to_homescreen": "Um zurück zum Hauptmenü zu gelangen, drücken Sie die Eingabetaste."
         },
-        "wealth_projection": {}
+        "wealth_projection": {
+            "welcome_text": {
+                "line_0": "Bitte halten Sie die durchschnittliche geometrische Rendite p.a. sowie Ihr Startkapital parat.",
+                "line_1": "Wenn keine monatlichen Sparraten getätigt werden, geben Sie bitte 0 ein.",
+                "line_2": "Die Währung für ihre Berechnungen ist:"
+            },
+            "user_input_selection_automatic_adjustement": "Vor der Berechnung müssen Sie auswählen, ob Sie auf Dynamisierung der monatliche Sparrate verzichten möchten (0) oder ob die Sparrate alle 3 Jahre um 5% erhöht werden soll (1): (0/1) ",
+            "user_input__details": "Bitte geben Sie nun die Berechnungsgrundlagen als Zahl ein.",
+            "inital_balance": "Startkapital",
+            "savings_rate": "monatliche Sparrate",
+            "savings_period": "Anlagehorizont | Jahren : ",
+            "interest_rate": "geometrische Rendite p.a. | % : ",
+            "invalid_input": "Ungültige Eingabe. Bitte geben sie eine gültige Zahl ein.",
+            "summary": {
+                "line_0": "Zusammenfassung der Vermögensentwicklung",
+                "line_1": "Vermögen",
+                "line_2": "Inlfationsbereinigtes Vermögen",
+                "line_3": "Sparzeitraum | Jahren : ",
+                "line_4": "geometrische Rendite p.a. | % : ",
+                "line_5": "Inflationsrate p.a. | % : ",
+                "line_6": "monatliche Sparrate",
+                "line_7": "Dynamisierung der Sparrate: ",
+                "line_8": "Zinsbeitrag",
+                "line_9": "Eigenbeitrag"
+            },
+            "return_to_homescreen": "Um zurück zum Hauptmenü zu gelangen, drücken Sie die Eingabetaste."
+        }
     }
 }
