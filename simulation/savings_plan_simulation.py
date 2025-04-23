@@ -113,7 +113,7 @@ def run_savings_plan_calculation(
             - Total amount saved (float)
             - Currency (str)
     Raises:
-        ValueError: If a required key is missing in the localized text configuration JSON.
+        KeyError: If a required key is missing in the localized text configuration JSON.
     Notes:
         - The function generates two CSV files:
             1. A detailed savings plan simulation.
@@ -142,7 +142,7 @@ def run_savings_plan_calculation(
     except KeyError as e:
         msg = f"Missing expected key in JSON: {e}"
         logger.error(msg)
-        raise ValueError
+        raise KeyError
 
     # Create DataFrame
     df_savings_plan = pd.DataFrame(
@@ -180,7 +180,7 @@ def run_savings_plan_calculation(
     except KeyError as e:
         msg = f"Missing expected key in JSON: {e}"
         logger.error(msg)
-        raise ValueError
+        raise KeyError
 
     # Create a new DataFrame that summarizes the credit details
     df_savings_summary = pd.DataFrame(

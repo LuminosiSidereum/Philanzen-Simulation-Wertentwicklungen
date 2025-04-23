@@ -185,7 +185,7 @@ def run_credit_downpayment_plan_calculation(
         currency (str, optional): The currency of the credit. Defaults to "EUR".
         language (str, optional): The language for text labels. Defaults to "de".
     Raises:
-        ValueError: If a required key is missing in the JSON configuration file.
+        KeyError: If a required key is missing in the JSON configuration file.
     Notes:
         - The function uses a JSON configuration file to load text labels for column names.
         - The calculation continues until the remaining credit balance is less than the
@@ -222,7 +222,7 @@ def run_credit_downpayment_plan_calculation(
     except KeyError as e:
         msg = f"Missing expected key in JSON: {e}"
         logger.error(msg)
-        raise ValueError
+        raise KeyError
 
     # Create DataFrame
     df_credit_simulation = pd.DataFrame(
@@ -266,7 +266,7 @@ def run_credit_downpayment_plan_calculation(
     except KeyError as e:
         msg = f"Missing expected key in JSON: {e}"
         logger.error(msg)
-        raise ValueError
+        raise KeyError
 
     # Create a new DataFrame that summarizes the credit details
     df_credit_summary = pd.DataFrame(

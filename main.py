@@ -242,7 +242,19 @@ def run_simulation_interface():
     try:
         execute_selected_simulation(user_choice, settings)
     except NotImplementedError:
-        print(ui_text["error"]["NotImplemented"])
+        for dialogue in ui_text["error"]["NotImplemented"].values():
+            print(dialogue)
+        utils.simple_countdown(5, "blink")
+    except KeyError:
+        for dialogue in ui_text["error"]["KeyError"].values():
+            print(dialogue)
+        print(f"{log_Path}")
+        utils.simple_countdown(5, "blink")
+    except ValueError:
+        for dialogue in ui_text["error"]["ValueError"].values():
+            print(dialogue)
+        print(f"{log_Path}")
+        utils.simple_countdown(5, "blink")
     except Exception as e:
         logger.critical(f"An unexpected error occurred: {e}")
         for dialogue in ui_text["error"]["UnhandledException"].values():

@@ -114,7 +114,7 @@ def run_wealth_projection_calculation(
             - Total savings
             - Currency
     Raises:
-        ValueError: If expected keys are missing in the JSON configuration file.
+        KeyError: If expected keys are missing in the JSON configuration file.
     Notes:
         - The function uses a JSON configuration file to load localized text for column names
           and file names.
@@ -149,7 +149,7 @@ def run_wealth_projection_calculation(
     except KeyError as e:
         msg = f"Missing expected key in JSON: {e}"
         logger.error(msg)
-        raise ValueError
+        raise KeyError
 
     # Create DataFrame with the initial values
     df_wealth_projection = pd.DataFrame(
@@ -189,7 +189,7 @@ def run_wealth_projection_calculation(
     except KeyError as e:
         msg = f"Missing expected key in JSON: {e}"
         logger.error(msg)
-        raise ValueError
+        raise KeyError
 
     # Calculate the final balance and inflation-adjusted final balance for the summary
     # The final balance is the last value in the balance column

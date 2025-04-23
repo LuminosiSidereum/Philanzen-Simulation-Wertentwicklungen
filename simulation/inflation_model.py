@@ -64,7 +64,7 @@ def run_inflation_calculation(
             - currency (str): The currency used in the simulation.
 
     Raises:
-        ValueError: If a required key is missing in the localized output text JSON.
+        KeyError: If a required key is missing in the localized output text JSON.
 
     Notes:
         - The function logs the process of creating the inflation summary.
@@ -101,7 +101,7 @@ def run_inflation_calculation(
     except KeyError as e:
         msg = f"Missing expected key in JSON: {e}"
         logger.error(msg)
-        raise ValueError
+        raise KeyError
 
     df_inflation_summary = pd.DataFrame(
         data=[
