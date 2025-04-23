@@ -23,7 +23,22 @@
             },
             "user_confirmation": "Zum Fortfahren drücken Sie die Eingabetaste.",
             "error": {
-                "NotImplemented": "Diese Funktion ist noch nicht implementiert.",
+                "NotImplemented": {
+                    "line_0": "Diese Funktion ist noch nicht implementiert.",
+                    "line_1": "Bitte warten Sie auf ein Update."
+                },
+                "KeyError": {
+                    "line_0": "Ein Fehler ist aufgetreten.",
+                    "line_1": "Der Fehler hat wahrscheinlich nichts mit Ihrer Eingabe zu tun.",
+                    "line_2": "Senden Sie deshalb bitte die Log-File an den Support. Vielen Dank!",
+                    "line_3": "Pfad zur Log-File:"
+                },
+                "ValueError": {
+                    "line_0": "Ein Fehler ist aufgetreten.",
+                    "line_1": "Bitte überprüfen Sie die Eingaben und versuchen Sie es erneut.",
+                    "line_2": "Wenn der Fehler weiterhin besteht, schicken Sie die Log-File an den Support. Vielen Dank!",
+                    "line_3": "Pfad zur Log-File:"
+                },
                 "UnhandledException": {
                     "line_0": "Sie werden gleich zum Hauptmenü zurückgeleitet.",
                     "line_1": "Ein unerwarteter Fehler ist aufgetreten und wurde protokolliert.",
