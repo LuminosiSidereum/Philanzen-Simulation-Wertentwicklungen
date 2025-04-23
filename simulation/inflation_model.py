@@ -157,7 +157,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
         - Handles platform-specific screen clearing (Windows or Unix-based systems).
     """
 
-    logger.info("Excecuting the inflation simulation.")
+    logger.info("Executing the inflation simulation.")
     # Load the UI text for the inflation simulation
     ui_text: dict = utils.load_text_json(
         language=language, interface="inflation_model", filename="ui_text"
