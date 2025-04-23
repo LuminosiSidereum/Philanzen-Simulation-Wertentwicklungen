@@ -79,19 +79,20 @@ Philanzen-Simulation-Wertentwicklung/
 │   │── __init__.py
 │   │── credit_simulation.py
 │   │── inflation_model.py
-│   │── wealth_projection.py
 │   │── savings_calculation.py
 │   │── utils.py
+│   │── wealth_projection.py
 │── data/
 │   │── input/
-│   │   │── financial_data.json
 │   │── output/
 │   │   │── results_01.csv
 │── resources/
+│   │── output_text.json
 │   │── settings.json
 │   │── ui_text.json
 │── main.py
 │── README.md  # (German for customers, packaged separately)
+│── poetry.lock
 │── pyproject.toml
 │── docs/  # (German documentation for customers, packaged separately)
 │── .gitignore
