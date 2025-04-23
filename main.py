@@ -33,7 +33,7 @@ def configure_logging() -> Path:
     - Rotation: Daily at midnight
     - Backup count: 7 days
     - Encoding: UTF-8
-    - Format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    - Format: "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s():%(lineno)d - %(message)s"
 
     Raises:
         OSError: If the log directory cannot be created.
@@ -54,7 +54,7 @@ def configure_logging() -> Path:
 
     # Create formatter
     formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s():%(lineno)d - %(message)s"
     )
 
     # File handler with rotation
