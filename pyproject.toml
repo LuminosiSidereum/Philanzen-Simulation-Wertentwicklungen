@@ -3,6 +3,7 @@ name = "philanzen-financial-simulation"
 version = "0.1.0"
 description = "The user can run different financial simulations. The results are saved as a csv in data/output."
 authors = [
+    {name = "Luminosi Sidereum",email = "development@Luminosi.de"},
     {name = "Phillipp Schultheiss",email = "phillipp-schultheiss@web.de"}
 ]
 license = {text = "MIT"}
