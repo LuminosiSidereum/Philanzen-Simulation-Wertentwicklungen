@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 from simulation import (
     credit_simulation,
     wealth_projection,
@@ -146,12 +147,12 @@ def validate_user_selection(*, ui_text: dict) -> int:
             user_input = user_input.lower()
             if user_input in valid_user_inputs["quit"]:
                 logger.info("User requested to quit the program.")
-                quit()
+                sys.exit()
 
             print(ui_text["invalid_action_selection"])
         except Exception as e:
             logger.error(f"{user_input = } triggered an error: {e}")
-            quit()
+            sys.exit()
 
 
 def execute_selected_simulation(user_choice: int, settings: dict) -> None:

@@ -4,13 +4,27 @@ import json
 import pandas as pd  # type: ignore
 from pandas import DataFrame
 import time
+import sys
 
 # Variables
 global_variables: dict = {"root_path": None}
 
 # Initialize base logic for the library
 logger = logging.getLogger(__name__)
-global_variables["root_path"] = Path(__file__).parent.parent
+
+if getattr(sys, "frozen", False):
+    # The script runs as a frozen executable (.exe)
+    # sys.executable is the path to the executable
+    root_path = Path(sys.executable).parent
+    logger.debug(f"Root path (frozen) set to {root_path}.")
+else:
+    # The script runs as a normal Python script
+    root_path = Path(__file__).parent.parent
+    logger.debug(
+        f"Root path (not frozen) set to {root_path}. This is the path to the root of the project."
+    )
+
+global_variables["root_path"] = root_path
 logger.debug(
     f"Root path set to {global_variables['root_path']}. This is the path to the root of the project."
 )
