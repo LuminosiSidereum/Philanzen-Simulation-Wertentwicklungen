@@ -18,7 +18,7 @@ A Python CLI tool for personal finance simulations, including credit repayment p
 
 ### Installation
 ```bash
-git clone https://github.com/LuminosiSidereum/Philanzen-Simulation-Wertentwicklungen.git
+git clone https://github.com/LuminosiSidereum/Philanzen-Simulation-Wertentwicklungen.git philanzen-financial-simulations
 cd philanzen-financial-simulations
 poetry install  # Installs dependencies
 ```
@@ -63,3 +63,6 @@ graph LR
     B --> C[CSV Results]
     C --> D[data/output/]
 ```
+## 📜 License
+The project is publsihed under the MIT license.
+For further information [checkout license](LICENSE.txt).
