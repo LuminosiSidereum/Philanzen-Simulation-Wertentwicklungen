@@ -89,13 +89,7 @@ def setup_project_structure(base_path: str = ".") -> None:
         - If the directories already exist, they will not be recreated.
         - Logs the location of the created project structure.
     """
-    structure = {
-        "data": ["input", "output"],
-        "docs": [],
-        "log": [],
-        "resources": [],
-        "simulation": [],
-    }
+    structure = {"data": ["input", "output"], "log": []}
 
     for folder, subfolders in structure.items():
         (Path(base_path) / folder).mkdir(parents=True, exist_ok=True)
