@@ -1,0 +1,29 @@
+LOGO License
+
+Copyright (c) 2025 Philanzen
+
+This license governs the use of the logo (the "Logo") as an application icon or any other visual representation associated with this software repository (the "Repository").
+
+1. Ownership
+The Logo is the sole and exclusive property of Philanzen (the "Copyright Holder"). 
+All rights, title, and interest in and to the Logo, including but not limited to copyright, are reserved by the Copyright Holder.
+
+2. Restrictions on Use
+Except as expressly permitted below, you are NOT authorized to use, reproduce, distribute, modify, display, perform, or otherwise exploit the Logo in any manner whatsoever without the express prior written permission of the Copyright Holder. This includes, but is not limited to:
+
+    * Using the Logo in your own software projects, applications, or websites.
+    * Distributing the Logo as a standalone graphic.
+    * Modifying the Logo for any purpose.
+    * Using the Logo to imply endorsement or affiliation with the Copyright Holder or the Repository without explicit written consent.
+
+3. Permitted Use for Repository Compilation
+Notwithstanding the restrictions above, you are permitted to use the Logo solely for the purpose of privately compiling the source code of this Repository for your own personal, non-commercial use. This limited permission does not grant you any rights to distribute the compiled application or the Logo contained therein.
+
+4. Obtaining Permission
+For any use of the Logo beyond the limited permission granted in Section 3, you must obtain express prior written permission from the Copyright Holder. Please contact development@luminosi.de to request permission.
+
+5. Disclaimer
+THE LOGO IS PROVIDED "AS IS" WITHOUT ANY WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE USE OF OR INABILITY TO USE THE LOGO.
+
+---
+In summary: You may use the Logo privately to compile this software. For any other use, please contact development@luminosi.de for permission.

@@ -64,5 +64,11 @@ graph LR
     C --> D[data/output/]
 ```
 ## 📜 License
-The project is publsihed under the MIT license.
-For further information [checkout license](LICENSE.txt).
+### MIT License
+The software code in this repository is licensed under the MIT License, as detailed in the [LICENSE.txt](LICENSE.txt) file.
+
+### Logo / App Icon License
+Please note that the application logo (the file `app_icon_philanzen.png`) is governed by a separate license.
+Its use is restricted as outlined in the [LOGO_LICENSE.txt](LOGO_LICENSE.txt) file. 
+Please refer to that file for the specific terms and conditions regarding the use of the logo.
+**You are permitted to use the logo without explicit permission only when compiling this repository privately for your own use.** All other forms of use require explicit permission from the copyright holder.
