@@ -133,9 +133,9 @@
                 "line_1": "Wenn keine monatlichen Sparraten getätigt werden, geben Sie bitte 0 ein.",
                 "line_2": "Die Währung für ihre Berechnungen ist:"
             },
-            "user_input_selection_automatic_adjustement": "Vor der Berechnung müssen Sie auswählen, ob Sie auf Dynamisierung der monatliche Sparrate verzichten möchten (0) oder ob die Sparrate alle 3 Jahre um 5% erhöht werden soll (1): (0/1) ",
+            "user_input_selection_automatic_adjustment": "Vor der Berechnung müssen Sie auswählen, ob Sie auf Dynamisierung der monatliche Sparrate verzichten möchten (0) oder ob die Sparrate alle 3 Jahre um 5% erhöht werden soll (1): (0/1) ",
             "user_input__details": "Bitte geben Sie nun die Berechnungsgrundlagen als Zahl ein.",
-            "inital_balance": "Startkapital",
+            "initial_balance": "Startkapital",
             "savings_rate": "monatliche Sparrate",
             "savings_period": "Anlagehorizont | Jahren : ",
             "interest_rate": "geometrische Rendite p.a. | % : ",

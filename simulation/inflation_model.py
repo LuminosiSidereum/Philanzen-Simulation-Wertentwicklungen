@@ -205,6 +205,6 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
 
     input(ui_text["return_to_homescreen"])
     logger.info(
-        "User returns to the homescreen after successfull exectution of the simulation."
+        "User returns to the homescreen after successful execution of the simulation."
     )
     return

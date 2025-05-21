@@ -129,7 +129,7 @@ def run_savings_plan_calculation(
         language=language, interface="savings_plan", filename="output_text"
     )
 
-    # Validate and extract colum names
+    # Validate and extract column names
     plan_keys: list = [
         "duration",
         "savings_amount",
@@ -164,7 +164,7 @@ def run_savings_plan_calculation(
         logger.debug(f"Updated DataFrame:\n{df_savings_plan.tail()}")
 
     # Summary of the credit details
-    # Validate and extract colum names for the summary
+    # Validate and extract column names for the summary
     plan_keys = [
         "savings_amount",  # 0 (float)
         "interest_rate",  # 1 (float)
@@ -236,8 +236,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
         - The function clears the terminal screen before displaying the summary.
         - Logs important events such as the start and end of the simulation, as well as errors.
     """
-
-    logger.info("Exectuting the savings plan simulation")
+    logger.info("Executing the savings plan simulation")
 
     ui_text: dict = utils.load_text_json(
         language=language, interface="savings_plan", filename="ui_text"
@@ -297,6 +296,6 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
 
     input(ui_text["return_to_homescreen"])
     logger.info(
-        "User returns to the homescreen after successfull execution of the simulation."
+        "User returns to the homescreen after successful execution of the simulation."
     )
     return

@@ -26,11 +26,11 @@ def _input_downpayment_monthly(
         float: The valid monthly repayment amount entered by the user.
     """
 
-    # Claculates the interest amount for the first month
+    # Calculates the interest amount for the first month
     interest_amount: float = credit * (interest / 100 / 12)
     print(f"{ui_text["credit_interest_monthly"]}: {interest_amount:.2f}")
     # Asks the user for the monthly repayment amount and checks if it is smaller than the interest amount
-    # If it is, it asks for the amount again and prints the interest amount as wekk as the repayment amount
+    # If it is, it asks for the amount again and prints the interest amount as well as the repayment amount
     while True:
         repayment: float = utils.user_input_float(
             ui_text["credit_downpayment_monthly"], ui_text["invalid_input"]
@@ -209,7 +209,7 @@ def run_credit_downpayment_plan_calculation(
         language=language, interface="credit_simulation", filename="output_text"
     )
 
-    # Validate and extract colum names
+    # Validate and extract column names
     plan_keys: list = [
         "duration",
         "remaining_credit",
@@ -250,7 +250,7 @@ def run_credit_downpayment_plan_calculation(
     logger.debug(f"Final DataFrame:\n{df_credit_simulation.tail()}")
 
     # Summary of the credit details
-    # Validate and extract colum names for the summary
+    # Validate and extract column names for the summary
     plan_keys = [
         "credit_amount",  # 0 (float)
         "interest_rate",  # 1 (float)
@@ -384,6 +384,6 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
 
     input(ui_text["return_to_homescreen"])
     logger.info(
-        "User returns to the homescreen after successfull execution of the simulation."
+        "User returns to the homescreen after successful execution of the simulation."
     )
     return

@@ -10,8 +10,8 @@
             "duration": "Laufzeit",
             "monthly_downpayment": "Monatliche Abzahlungsrate",
             "currency": "Währung",
-            "file_name_credit_simulation": "kredit_simulation_monatliche_abzahlung",
-            "file_name_credit_summary": "kredit_simulation_zusammenfassung"
+            "file_name_credit_simulation": "kreditabzahlung_simulation",
+            "file_name_credit_summary": "kreditabzahlung_zusammenfassung"
         },
         "inflation_model": {
             "duration": "Laufzeit",
@@ -22,7 +22,7 @@
             "bread_current_amount": "Aktuell kaufbare Laibe Brot",
             "bread_future_amount": "Zukünftig kaufbare Laibe Brot",
             "currency": "Währung",
-            "file_name_inflation_simulation": "inflationssimulation"
+            "file_name_inflation_simulation": "inflation_zusammenfassung"
         },
         "wealth_projection": {
             "balance": "Vermögen", 
@@ -31,12 +31,12 @@
             "interest_amount": "Zinsen",
             "interest_rate": "geo. Rendite",  
             "inflation_rate": "Inflationsrate",  
-            "automatic_adjustement": "Dynamisierung",
+            "automatic_adjustment": "Dynamisierung",
             "monthly_savings": "Monatliche Einzahlung", 
             "total_interest": "Zinsbeitrag", 
             "total_saved": "Eigenbeitrag", 
             "currency": "Währung",
-            "file_name_wealth_projection": "vermoegensentwicklung",
+            "file_name_wealth_projection": "vermoegensentwicklung_simulation",
             "file_name_wealth_projection_summary": "vermoegensentwicklung_zusammenfassung"  
         },
         "savings_plan": {

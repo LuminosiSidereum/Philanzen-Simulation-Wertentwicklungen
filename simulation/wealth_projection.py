@@ -8,7 +8,7 @@ from simulation.inflation_model import calculate_inflated_capital
 logger = logging.getLogger(__name__)
 
 
-def _selection_automatic_adjustement(ui_text: dict) -> int:
+def _select_automatic_adjustment(ui_text: dict) -> int:
     """
     Handles user input for selecting automatic adjustment options.
 
@@ -19,7 +19,7 @@ def _selection_automatic_adjustement(ui_text: dict) -> int:
     Args:
         ui_text (dict): A dictionary containing text prompts and error messages.
             Expected keys:
-                - "user_input_selection_automatic_adjustement": Prompt message for user input.
+                - "user_input_selection_automatic_adjustment": Prompt message for user input.
                 - "invalid_input": Message displayed when the input is invalid.
 
     Returns:
@@ -29,7 +29,7 @@ def _selection_automatic_adjustement(ui_text: dict) -> int:
     while True:
         try:
             user_input = int(
-                input(ui_text["user_input_selection_automatic_adjustement"])
+                input(ui_text["user_input_selection_automatic_adjustment"])
             )
             if user_input in [0, 1]:
                 return user_input
@@ -78,11 +78,11 @@ def _calculate_monthly_values(
 
 
 def run_wealth_projection_calculation(
-    inital_balance: float,
+    initial_balance: float,
     interest_rate: float,
     savings_rate: float,
     period_years: int,
-    automatic_adjustement: int,
+    automatic_adjustment: int,
     currency: str,
     language: str,
 ) -> list:
@@ -93,11 +93,11 @@ def run_wealth_projection_calculation(
     generates a detailed projection DataFrame and a summary DataFrame, which are saved
     to CSV files.
     Args:
-        inital_balance (float): The starting balance for the wealth projection.
+        initial_balance (float): The starting balance for the wealth projection.
         interest_rate (float): The annual interest rate (as a decimal, e.g., 0.05 for 5%).
         savings_rate (float): The monthly savings amount.
         period_years (int): The number of years for the projection.
-        automatic_adjustement (int): Flag to enable automatic savings adjustment every 3 years
+        automatic_adjustment (int): Flag to enable automatic savings adjustment every 3 years
                                      (1 to enable, 0 to disable).
         currency (str): The currency symbol or code (e.g., "USD", "EUR").
         language (str): The language code for loading localized text (e.g., "en", "de").
@@ -126,17 +126,17 @@ def run_wealth_projection_calculation(
 
     logger.info(
         "Starting the wealth projection calculation with the following parameters: "
-        f"Initial balance: {inital_balance}, Interest rate: {interest_rate}, "
+        f"Initial balance: {initial_balance}, Interest rate: {interest_rate}, "
         f"Savings rate: {savings_rate}, Period years: {period_years}, "
-        f"Automatic adjustment: {automatic_adjustement}"
+        f"Automatic adjustment: {automatic_adjustment}"
     )
 
-    # Load the collum names for the dataframes from the JSON file
+    # Load the column names for the dataframes from the JSON file
     output_text: dict = utils.load_text_json(
         language=language, interface="wealth_projection", filename="output_text"
     )
 
-    # Validate and extract colum names from output_text
+    # Validate and extract column names from output_text
     plan_keys: list = [
         "duration",  # 0 (float)
         "balance",  # 1 (float)
@@ -153,13 +153,13 @@ def run_wealth_projection_calculation(
 
     # Create DataFrame with the initial values
     df_wealth_projection = pd.DataFrame(
-        data=[[0, inital_balance + savings_rate, 0, savings_rate]],
+        data=[[0, initial_balance + savings_rate, 0, savings_rate]],
         columns=col_names_simulation,
     )
     logger.debug(f"DataFrame created:\n{df_wealth_projection.head()}")
 
     for i in range(period_years * 12):
-        if automatic_adjustement == 1 and i % 36 == 0 and i != 0:
+        if automatic_adjustment == 1 and i % 36 == 0 and i != 0:
             savings_rate = round(savings_rate * 1.05, 2)
             logger.debug(f"Automatic adjustment applied: {savings_rate = }")
         # Calculate monthly values
@@ -170,7 +170,7 @@ def run_wealth_projection_calculation(
             savings_rate,
         )
     # Summary of the wealth plan
-    # Validate and extract colum names for the summary from output_text
+    # Validate and extract column names for the summary from output_text
     plan_keys = [
         "balance",  # 0 (float)
         "inflated_balance",  # 1 (float)
@@ -178,7 +178,7 @@ def run_wealth_projection_calculation(
         "interest_rate",  # 3 (float)
         "inflation_rate",  # 4 (float)
         "monthly_savings",  # 5 (float)
-        "automatic_adjustement",  # 6 (int)
+        "automatic_adjustment",  # 6 (int)
         "total_interest",  # 7 (float)
         "total_saved",  # 8 (float)
         "currency",  # 9 (str)
@@ -210,11 +210,11 @@ def run_wealth_projection_calculation(
                 interest_rate,
                 inflation_rate,
                 savings_rate,
-                automatic_adjustement,
+                automatic_adjustment,
                 df_wealth_projection[col_names_simulation[2]].sum().round(2),
                 round(
                     df_wealth_projection[col_names_simulation[3]].sum()
-                    + inital_balance,
+                    + initial_balance,
                     2,
                 ),
                 currency,
@@ -253,8 +253,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
         - The screen is cleared before displaying the summary for better readability.
         - Logs are generated to track the execution process and any errors encountered.
     """
-
-    logger.info("Exectuting the wealth projection simulation")
+    logger.info("Executing the wealth projection simulation")
 
     ui_text: dict = utils.load_text_json(
         language=language, interface="wealth_projection", filename="ui_text"
@@ -264,8 +263,8 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
     print(f"{currency}")
 
     # The user inserts the calculation parameters
-    inital_balance: float = utils.user_input_float(
-        ui_text_input_request=f"{ui_text["inital_balance"]} | {currency}: ",
+    initial_balance: float = utils.user_input_float(
+        ui_text_input_request=f"{ui_text["initial_balance"]} | {currency}: ",
         ui_text_invalid_input=ui_text["invalid_input"],
     )
     interest_rate: float = utils.user_input_float(
@@ -278,7 +277,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
     # The user selects if the savings rate should be adjusted automatically, if a savings rate is set
     automatic_adjustement: int = 0
     if savings_rate > 0:
-        automatic_adjustement = _selection_automatic_adjustement(ui_text)
+        automatic_adjustement = _select_automatic_adjustment(ui_text)
 
     # The user inserts the savings period in years
     period_years: int = utils.user_input_int(
@@ -289,7 +288,7 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
 
     # Execute the wealth projection calculation
     summary = run_wealth_projection_calculation(
-        inital_balance,
+        initial_balance,
         interest_rate,
         savings_rate,
         period_years,
@@ -316,6 +315,6 @@ def execute_simulation(language: str = "de", currency: str = "EUR") -> None:
 
     input(ui_text["return_to_homescreen"])
     logger.info(
-        "User returns to the homescreen after successfull execution of the simulation."
+        "User returns to the homescreen after successful execution of the simulation."
     )
     return
