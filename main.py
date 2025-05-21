@@ -134,7 +134,7 @@ def validate_user_selection(*, ui_text: dict) -> int:
                 number_input = int(user_input)
             if (
                 number_input in valid_user_inputs["modes"]
-                or user_input in valid_user_inputs["settings"]
+                or number_input in valid_user_inputs["settings"]
             ):
                 return number_input
 
