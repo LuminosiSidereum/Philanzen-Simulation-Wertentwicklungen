@@ -212,8 +212,11 @@ def run_wealth_projection_calculation(
                 savings_rate,
                 automatic_adjustement,
                 df_wealth_projection[col_names_simulation[2]].sum().round(2),
-                df_wealth_projection[col_names_simulation[3]].sum().round(2)
-                + inital_balance,
+                round(
+                    df_wealth_projection[col_names_simulation[3]].sum()
+                    + inital_balance,
+                    2,
+                ),
                 currency,
             ]
         ],

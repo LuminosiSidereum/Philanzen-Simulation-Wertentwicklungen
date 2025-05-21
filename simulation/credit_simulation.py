@@ -277,7 +277,10 @@ def run_credit_downpayment_plan_calculation(
                 df_credit_simulation.iloc[-1][col_names_simulation[0]],
                 downpayment,
                 df_credit_simulation[col_names_simulation[2]].sum().round(2),
-                df_credit_simulation[col_names_simulation[2]].sum().round(2) + credit,
+                round(
+                    df_credit_simulation[col_names_simulation[2]].sum() + credit,
+                    2,
+                ),
                 currency,
             ]
         ],
