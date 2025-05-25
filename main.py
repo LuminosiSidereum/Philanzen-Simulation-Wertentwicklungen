@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+import time
 from simulation import (
     credit_simulation,
     wealth_projection,
@@ -43,11 +44,12 @@ def configure_logging() -> Path:
         Path: The path to the log file.
     """
 
-    Path("log").mkdir(
+    log_dir = Path.home() / "Desktop" / "Philanzen-Data" / "logs"
+    log_dir.mkdir(
         parents=True, exist_ok=True
     )  # Create log directory if it doesn't exist
 
-    log_Path = Path("log/financial_simulations.log")
+    log_Path = log_dir / "financial_simulations.log"
 
     # Get the root logger
     root_logger = logging.getLogger()
@@ -89,14 +91,6 @@ def setup_project_structure(base_path: str = ".") -> None:
         - If the directories already exist, they will not be recreated.
         - Logs the location of the created project structure.
     """
-    structure = {"data": ["input", "output"], "log": []}
-
-    for folder, subfolders in structure.items():
-        (Path(base_path) / folder).mkdir(parents=True, exist_ok=True)
-        for sub in subfolders:
-            (Path(base_path) / folder / sub).mkdir(exist_ok=True)
-
-    logger.debug(f"Project structure created at {Path(base_path).resolve()}")
 
 
 # MARK: Functions
@@ -260,10 +254,19 @@ def run_simulation_interface():
 
 if __name__ == "__main__":
     print("...")
+    try:
+        setup_project_structure()
+    except Exception as e:
+        log_Path = configure_logging()
+        logger = logging.getLogger(__name__)
+        logger.critical(f"Failed to set up project structure: {e}")
+        print(f"Critical Error: Please send the log file to the developer: {log_Path}")
+        time.sleep(15)
+        sys.exit()
+
     log_Path = configure_logging()
     logger = logging.getLogger(__name__)
     logger.info("Starting the financial simulation program.")
-    setup_project_structure()
     while True:
         os.system("cls" if os.name == "nt" else "clear")
         run_simulation_interface()
