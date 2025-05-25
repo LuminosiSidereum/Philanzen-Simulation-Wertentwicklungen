@@ -82,10 +82,6 @@ Philanzen-Simulation-Wertentwicklung/
 │   │── savings_calculation.py
 │   │── utils.py
 │   │── wealth_projection.py
-│── data/
-│   │── input/
-│   │── output/
-│   │   │── results_01.csv
 │── resources/
 │   │── output_text.json
 │   │── settings.json
