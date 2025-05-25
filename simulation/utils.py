@@ -5,13 +5,19 @@ import pandas as pd  # type: ignore
 from pandas import DataFrame
 import time
 import sys
+import os
+import ctypes
 
 # Variables
-global_variables: dict = {"root_path": None}
+global_variables: dict = {
+    "root_path": None,
+    "user_data_root_path": Path.home() / "Desktop" / "Philanzen-Data",
+}
 
 # Initialize base logic for the library
 logger = logging.getLogger(__name__)
 
+# Sets up the root path based on whether the script is frozen or not.
 if getattr(sys, "frozen", False):
     # The script runs as a frozen executable (.exe)
     # sys.executable is the path to the executable
@@ -31,6 +37,105 @@ logger.debug(
 
 
 # MARK: Functions
+def setup_output_directory() -> None:
+    """
+    Sets up the output file directory structure and configures a custom folder icon.
+    This function performs the following tasks:
+    1. Creates the necessary directory structure for user data, including "data" and "logs" folders.
+    2. Checks if the `desktop.ini` file exists in the user data root path to determine if the project structure is already set up.
+    3. If the `desktop.ini` file does not exist:
+        - Verifies the existence of the folder icon file.
+        - Writes the `desktop.ini` file to configure the folder icon.
+        - Hides the `desktop.ini` file from the user.
+        - Forces Windows Explorer to reload the folder icon.
+    Logs appropriate messages during each step of the process.
+    Returns:
+        None
+    """
+
+    # Create the output directory for user data if it does not exist.
+    structure: dict[str, list] = {"data": [], "logs": []}
+
+    for folder, subfolders in structure.items():
+        (global_variables["user_data_root_path"] / folder).mkdir(
+            parents=True, exist_ok=True
+        )
+        for sub in subfolders:
+            (global_variables["user_data_root_path"] / folder / sub).mkdir(
+                exist_ok=True
+            )
+
+    logger.debug(
+        f"Project structure created at {global_variables["user_data_root_path"].resolve()}"
+    )
+
+    # Check if the desktop.ini file exists in the user data root path.
+    # If the file exists, the project structure is already set up.
+    desktop_ini = global_variables["user_data_root_path"] / "desktop.ini"
+    if desktop_ini.exists():
+        logger.info(
+            "desktop.ini file already exists, project structure is already set up => returning."
+        )
+        return
+
+    # If the desktop.ini file does not exist, set up the output folder icon.
+    logger.debug("desktop.ini file does not exist, setting up output folder icon.")
+    # Define and check if icon file exists
+    icon_location = (
+        global_variables["root_path"] / "resources" / "folder_icon_philanzen.ico"
+    )
+    if not Path(icon_location).is_file():
+        logger.error(
+            f"Icon file not found at {icon_location}. Please ensure the icon file exists."
+        )
+        return
+
+    # Change the icon for the output folder
+    # Write desktop.ini
+    desktop_ini.write_text(
+        f"""[.ShellClassInfo]
+IconResource={icon_location},0
+IconFile={icon_location}
+IconIndex=0
+""",
+        encoding="utf-8",
+    )
+
+    # Hide desktop.ini
+    os.system(f'attrib +h "{desktop_ini}"')
+    logger.info("Output folder and folder icon set up successfully.")
+
+
+def toggle_user_data_folder_icon(visible: bool = False) -> None:
+    """
+    Toggles the visibility of the user data folder icon by modifying its system folder attribute.
+    This function uses system commands and Windows API calls to update the folder's attributes
+    and notify the system to refresh the icon display in Windows Explorer.
+    Args:
+        visible (bool): If False, removes the system folder attribute from the user data folder,
+                        making it appear as a normal folder. If True, adds the system folder
+                        attribute to the user data folder, making it appear as a system folder.
+    Returns:
+        None
+    """
+    # NOTE: In order to display the custom folder icon, the folder must be marked as a system folder.
+    if visible == False:
+        # Force Explorer to reload the folder icon with the system folder attribute removed
+        os.system(
+            f'attrib -s "{global_variables["user_data_root_path"]}"'
+        )  # Removed system folder attribute
+        time.sleep(0.1)  # Allow time for the attribute to update
+        ctypes.windll.shell32.SHChangeNotify(0x8000000, 0x1000, None, None)
+        return
+    elif visible == True:
+        # Force Explorer to reload the folder icon with the system folder attribute added
+        os.system(
+            f'attrib +s "{global_variables["user_data_root_path"]}"'
+        )  # Added system folder attribute
+        time.sleep(0.1)  # Allow time for the attribute to update
+        ctypes.windll.shell32.SHChangeNotify(0x8000000, 0x1000, None, None)
+
+
 def load_text_json(*, language: str, interface: str, filename: str) -> dict:
     """
     Load text from a JSON file based on the specified language and interface.
@@ -125,9 +230,7 @@ def save_dataframe_to_csv(df: DataFrame, filename: str) -> None:
         filename (str): The name of the file to save the DataFrame to.
     """
     try:
-        file_path = (
-            global_variables["root_path"] / "data" / "output" / f"{filename}.csv"
-        )
+        file_path = global_variables["user_data_root_path"] / "data" / f"{filename}.csv"
         df.to_csv(file_path, index=False)
         logger.info(f"DataFrame saved to {file_path}")
     except Exception as e:

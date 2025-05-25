@@ -12,6 +12,9 @@ from simulation import (
 from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 
+# MARK: Global Variables
+# Define a dictionary to hold valid user inputs for modes, settings, and quit commands.
+# This dictionary is used to validate user input in the simulation interface.
 valid_user_inputs: dict[str, list] = {
     "modes": [0, 1, 2, 3],
     "settings": [99],
@@ -75,22 +78,6 @@ def configure_logging() -> Path:
     root_logger.addHandler(file_handler)
 
     return log_Path
-
-
-# Project Structure Setup
-def setup_project_structure(base_path: str = ".") -> None:
-    """
-    Creates the required folder structure for the project.
-
-    Args:
-        base_path (str): The base directory where the project structure will be created.
-                         Defaults to the current directory (".").
-
-    Notes:
-        - The function ensures that the necessary directories for the project are created.
-        - If the directories already exist, they will not be recreated.
-        - Logs the location of the created project structure.
-    """
 
 
 # MARK: Functions
@@ -182,7 +169,7 @@ def execute_selected_simulation(user_choice: int, settings: dict) -> None:
             settings["ui"]["language"], settings["financial"]["currency"]
         )
     elif user_choice == 99:
-        logging.critical(f"{user_choice = } is not implemented yet.")
+        logger.critical(f"{user_choice = } is not implemented yet.")
         raise NotImplementedError
     else:
         logger.error(
@@ -254,19 +241,18 @@ def run_simulation_interface():
 
 if __name__ == "__main__":
     print("...")
+    log_Path = configure_logging()
+    logger = logging.getLogger(__name__)
+    logger.info("Starting the financial simulation program.")
+
     try:
-        setup_project_structure()
+        utils.setup_output_directory()
     except Exception as e:
-        log_Path = configure_logging()
-        logger = logging.getLogger(__name__)
         logger.critical(f"Failed to set up project structure: {e}")
         print(f"Critical Error: Please send the log file to the developer: {log_Path}")
         time.sleep(15)
         sys.exit()
 
-    log_Path = configure_logging()
-    logger = logging.getLogger(__name__)
-    logger.info("Starting the financial simulation program.")
     while True:
         os.system("cls" if os.name == "nt" else "clear")
         run_simulation_interface()
