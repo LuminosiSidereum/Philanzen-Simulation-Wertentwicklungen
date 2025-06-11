@@ -221,18 +221,68 @@ def user_input_int(ui_text_input_request: str, ui_text_invalid_input: str) -> in
             print(ui_text_invalid_input)
 
 
+def update_csv_format_in_global_variables() -> None:
+    """
+    Updates the global variable `csv_format` with the value specified in the settings.
+    This function retrieves the application settings using the `load_settings` function,
+    accesses the `csv_format` value from the settings under the "data" section, and updates
+    the `global_variables` dictionary with this value.
+    Returns:
+        None
+    """
+
+    settings = load_settings()
+    global_variables["csv_format"] = settings["data"]["csv_format"]
+
+
 def save_dataframe_to_csv(df: DataFrame, filename: str) -> None:
     """
-    Save a DataFrame to a CSV file.
-
+    Save a pandas DataFrame to a CSV file with configurable formatting.
+    This function saves a DataFrame to a CSV file in a directory specified by
+    the global variable `user_data_root_path`. The CSV formatting (e.g.,
+    separator and decimal symbol) is determined by the `csv_format` key in
+    the `global_variables` dictionary. If the format is "de", the CSV will
+    use a semicolon as the separator and a comma as the decimal symbol. If
+    the format is "us", the CSV will use a comma as the separator and a dot
+    as the decimal symbol. If no format is specified, default pandas
+    settings are used.
     Args:
         df (pd.DataFrame): The DataFrame to save.
-        filename (str): The name of the file to save the DataFrame to.
+        filename (str): The name of the file (without extension) to save the
+            DataFrame to.
+    Raises:
+        Exception: If an error occurs during the saving process, it is
+            logged and re-raised.
     """
     try:
         file_path = global_variables["user_data_root_path"] / "data" / f"{filename}.csv"
-        df.to_csv(file_path, index=False)
+
+        if "csv_format" not in global_variables:
+            update_csv_format_in_global_variables()
+
+        format = global_variables["csv_format"]
+        if format == "de":
+            # Set the decimal separator to comma for German format
+            df.to_csv(
+                file_path,
+                index=False,
+                sep=";",
+                decimal=",",
+            )
+        elif format == "us":
+            # Set the decimal separator to dot for US format
+            df.to_csv(
+                file_path,
+                index=False,
+                sep=",",
+                decimal=".",
+            )
+        else:
+            # Save in the standard python format if no valid format is given
+            df.to_csv(file_path, index=False)
+
         logger.info(f"DataFrame saved to {file_path}")
+
     except Exception as e:
         logger.error(f"Error saving DataFrame to CSV: {e}")
 
