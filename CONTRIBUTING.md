@@ -83,6 +83,7 @@ Philanzen-Simulation-Wertentwicklung/
 │   │── utils.py
 │   │── wealth_projection.py
 │── resources/
+│   │── folder_icon_philanzen.ico
 │   │── output_text.json
 │   │── settings.json
 │   │── ui_text.json
